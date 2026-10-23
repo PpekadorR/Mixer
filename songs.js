@@ -32,7 +32,7 @@ window.MULTITRACK_SONGS = [
       { name: "PERC", file: "audio/no-supiste-quererla/Percussion.mp3", color: "#aab2bd" },
       { name: "GUITAR", file: "audio/no-supiste-quererla/Guitar.mp3", color: "#a5e65a" }
     ]
-  }
+  },
   {
     id: "no-me-llames",
     title: "No me llames",
