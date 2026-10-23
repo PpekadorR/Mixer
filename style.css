@@ -1472,20 +1472,20 @@ footer span {
   min-height: 22px;
 }
 
-/* Evitar que las etiquetas de tiempo aparezcan en la columna PISTA */
-.arrangement-labels .timeline-ruler,
-.arrangement-labels .time-label,
-.arrangement-labels .ruler-label {
-  display: none;
+/* Evitar que la regla del tiempo invada la columna de nombres de pistas */
+.arrangement-labels {
+  position: relative;
+  overflow: hidden;
 }
 
+.arrangement-label-heading {
+  position: relative;
+  z-index: 2;
+  background: #171a1f;
+}
 
-/* Ocultar las etiquetas de tiempo que aparecen en la columna izquierda */
-#arrangementLabels .time-label,
-#arrangementLabels .ruler-label,
-#arrangementLabels .timeline-label,
-#arrangementLabels [data-time],
-.arrangement-labels .time,
-.arrangement-labels .tick-label {
-  display: none !important;
+/* La regla y sus tiempos permanecen en el área de la línea de tiempo */
+.timeline-ruler {
+  position: relative;
+  overflow: hidden;
 }
