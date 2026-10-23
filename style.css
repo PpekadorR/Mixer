@@ -1301,3 +1301,364 @@ footer span {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* =========================================
+   PPEKADORR · MULTITRACK ARRANGEMENT
+========================================= */
+
+.arrangement {
+  margin-bottom: 22px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.arrangement-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.arrangement-tools > span:first-child {
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-right: 8px;
+}
+
+.arrangement-tools button {
+  min-width: 30px;
+  height: 29px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--panel2);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.arrangement-tools button:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+#zoomValue {
+  min-width: 42px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.arrangement-legend {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: .6px;
+}
+
+.arrangement-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend-wave {
+  display: inline-block;
+  width: 16px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--green);
+}
+
+.legend-playhead {
+  display: inline-block;
+  width: 2px;
+  height: 13px;
+  background: var(--red);
+}
+
+.arrangement-viewport {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  min-width: 0;
+  background: #15181d;
+}
+
+.arrangement-labels {
+  position: relative;
+  z-index: 3;
+  background: #1a1d23;
+  border-right: 1px solid var(--line);
+}
+
+.arrangement-label-heading {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.arrangement-track-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  height: 67px;
+  padding: 0 12px;
+  overflow: hidden;
+  border-bottom: 1px solid #30343c;
+  border-left: 3px solid var(--track-color, var(--green));
+}
+
+.arrangement-track-label strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arrangement-track-label small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arrangement-scroll {
+  position: relative;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-color: #444b56 #181b20;
+  scrollbar-width: thin;
+}
+
+.arrangement-content {
+  position: relative;
+  min-width: 100%;
+  width: max-content;
+}
+
+.timeline-ruler {
+  position: relative;
+  height: 38px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background-color: #20242b;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 59px,
+    rgba(255,255,255,.035) 60px
+  );
+  cursor: crosshair;
+}
+
+.timeline-mark {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-left: 1px solid #505661;
+  pointer-events: none;
+}
+
+.timeline-mark span {
+  display: block;
+  padding: 5px 0 0 5px;
+  color: #aeb6c1;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.arrangement-tracks {
+  position: relative;
+  width: max-content;
+}
+
+.arrangement-track {
+  position: relative;
+  height: 67px;
+  overflow: hidden;
+  border-bottom: 1px solid #30343c;
+  background-color: #191d23;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 59px,
+    rgba(255,255,255,.025) 60px
+  );
+  cursor: crosshair;
+}
+
+.arrangement-track:nth-child(even) {
+  background-color: #1c2026;
+}
+
+.arrangement-track canvas {
+  display: block;
+  position: relative;
+  z-index: 1;
+  max-width: none;
+  pointer-events: none;
+}
+
+.arrangement-track.loading::after {
+  content: "ANALIZANDO AUDIO…";
+  position: absolute;
+  top: 26px;
+  left: 12px;
+  z-index: 2;
+  color: #77818e;
+  font-size: 9px;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+.arrangement-track.wave-error::after {
+  content: "NO SE PUDO CARGAR LA FORMA DE ONDA";
+  position: absolute;
+  top: 26px;
+  left: 12px;
+  z-index: 2;
+  color: var(--red);
+  font-size: 9px;
+  letter-spacing: .5px;
+  pointer-events: none;
+}
+
+.arrangement-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  width: 0;
+  pointer-events: none;
+}
+
+.playhead-cap {
+  position: absolute;
+  top: 0;
+  left: -5px;
+  width: 10px;
+  height: 11px;
+  background: var(--red);
+  clip-path: polygon(0 0, 100% 0, 100% 65%, 50% 100%, 0 65%);
+}
+
+.playhead-line {
+  position: absolute;
+  top: 10px;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  background: var(--red);
+  box-shadow: 0 0 7px rgba(250, 93, 103, .5);
+}
+
+.arrangement-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10px;
+}
+
+#arrangementTrackCount {
+  color: var(--green);
+  font-weight: 800;
+}
+
+/* Canales vacíos del mezclador */
+
+.disabled-channel {
+  opacity: .4;
+}
+
+.disabled-channel .fader {
+  cursor: not-allowed;
+}
+
+/* Estado visual de los controles */
+
+.channel-buttons button.active-mute {
+  border-color: var(--red);
+  background: rgba(250, 93, 103, .15);
+  color: var(--red);
+}
+
+.channel-buttons button.active-solo {
+  border-color: var(--amber);
+  background: rgba(244, 182, 75, .15);
+  color: var(--amber);
+}
+
+.channel.muted-channel {
+  opacity: .58;
+}
+
+.channel.muted-channel .channel-name {
+  color: var(--muted);
+}
+
+/* Responsive */
+
+@media (max-width: 760px) {
+  .arrangement-viewport {
+    grid-template-columns: 125px minmax(0, 1fr);
+  }
+
+  .arrangement-track-label {
+    padding: 0 8px;
+  }
+
+  .arrangement-legend {
+    gap: 10px;
+  }
+
+  .arrangement-legend span:last-child {
+    flex-basis: 100%;
+  }
+
+  .arrangement-tools > span:first-child {
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .arrangement-viewport {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+
+  .arrangement-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .arrangement-tools {
+    gap: 5px;
+  }
+
+  .arrangement-tools button {
+    padding: 0 7px;
+  }
+}
