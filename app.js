@@ -34,6 +34,7 @@
   let songLoadId = 0;
 
   const waveformCache = new Map();
+  const localObjectUrls = new Set();
 
   const fmt = (seconds) => {
     seconds = Math.max(0, Number.isFinite(seconds) ? seconds : 0);
@@ -144,14 +145,7 @@
     const select = $("songSelect");
     if (!select) return;
 
-    select.innerHTML = "";
-
-    if (!songs.length) {
-      select.innerHTML =
-        '<option value="">No hay canciones configuradas</option>';
-      return;
-    }
-
+    select.innerHTML = '<option value="">Sesión en blanco</option>';
     songs.forEach((song) => {
       const option = document.createElement("option");
       option.value = song.id;
@@ -160,8 +154,9 @@
     });
 
     select.addEventListener("change", () => {
-      const song = songs.find((item) => item.id === select.value);
+      const song = songs.find((item) => String(item.id) === select.value);
       if (song) loadSong(song);
+      else clearSession();
     });
   }
 
@@ -210,21 +205,66 @@
     });
   }
 
-  function loadSong(song) {
-    const thisLoad = ++songLoadId;
-
-    stopAll();
-
+  function releaseTracks() {
     tracks.forEach((track) => {
       track.audio.pause();
 
       if (window.PekadorEQ) {
-        window.PekadorEQ.unregisterTrackEQ(track.index);
+        try {
+          window.PekadorEQ.unregisterTrackEQ(track.index);
+        } catch (_) {}
       }
 
       track.audio.removeAttribute("src");
       track.audio.load();
+
+      if (track.meta.localObjectUrl) {
+        URL.revokeObjectURL(track.meta.localObjectUrl);
+        localObjectUrls.delete(track.meta.localObjectUrl);
+      }
     });
+
+    tracks = [];
+  }
+
+  function clearSession() {
+    ++songLoadId;
+    stopAll();
+    releaseTracks();
+
+    selectedSong = null;
+    soloIndex = null;
+    pausedAt = 0;
+    duration = 0;
+
+    if ($("songSelect")) $("songSelect").value = "";
+    if ($("songTitle")) $("songTitle").textContent = "Sesión en blanco";
+
+    if ($("songMeta")) {
+      $("songMeta").textContent =
+        "Arrastra audios al arreglo o pulsa + AÑADIR AUDIOS";
+    }
+
+    if ($("bpmValue")) {
+      $("bpmValue").innerHTML = '--- <small>BPM</small>';
+    }
+
+    if ($("loadedTracks")) $("loadedTracks").textContent = "0 TRACKS";
+    if ($("currentTime")) $("currentTime").textContent = fmt(0);
+    if ($("duration")) $("duration").textContent = "DUR 00:00";
+
+    renderChannels();
+    renderList();
+    updateVolumes();
+    updateDuration();
+    renderArrangement();
+  }
+
+  function loadSong(song) {
+    const thisLoad = ++songLoadId;
+
+    stopAll();
+    releaseTracks();
 
     selectedSong = song;
     soloIndex = null;
@@ -337,6 +377,7 @@
         track.meta.name || `PISTA ${index + 1}`;
 
       channel.querySelector(".channel-file").textContent =
+        track.meta.originalName ||
         String(track.meta.file || "").split("/").pop();
 
       channel.querySelector(".eq-btn").dataset.trackName =
@@ -422,12 +463,7 @@
   ========================= */
 
   async function play() {
-    if (!selectedSong) {
-      if (songs[0]) loadSong(songs[0]);
-      else return;
-    }
-
-    if (playing) return;
+    if (!tracks.length || playing) return;
 
     if (duration && pausedAt >= duration) {
       seekTo(0);
@@ -451,11 +487,16 @@
       tracks.map((track) => track.audio.play())
     );
 
-    if (results.length && results.every((result) => result.status === "rejected")) {
+    if (
+      results.length &&
+      results.every((result) => result.status === "rejected")
+    ) {
       playing = false;
+
       if ($("playBtn")) {
         $("playBtn").innerHTML = '<span class="play-icon"></span>';
       }
+
       return;
     }
 
@@ -633,7 +674,9 @@
       name.textContent = track.meta.name || `PISTA ${index + 1}`;
 
       const file = document.createElement("small");
-      file.textContent = String(track.meta.file || "").split("/").pop();
+      file.textContent =
+        track.meta.originalName ||
+        String(track.meta.file || "").split("/").pop();
 
       label.append(name, file);
       labels.appendChild(label);
@@ -930,14 +973,181 @@
     renderArrangement();
   });
 
-  // Inicialización.
+  // Importación local: los archivos permanecen en el navegador y no se suben.
+  function setupAudioImport() {
+    const tools = document.querySelector(".arrangement-tools");
+    const viewport = $("arrangementViewport") || $("arrangement");
+
+    if (!tools || !viewport) return;
+
+    const addButton = document.createElement("button");
+    addButton.type = "button";
+    addButton.id = "addAudioBtn";
+    addButton.className = "add-audio-btn";
+    addButton.textContent = "+ AÑADIR AUDIOS";
+    addButton.title = "Importar uno o varios archivos de audio";
+
+    const clearButton = document.createElement("button");
+    clearButton.type = "button";
+    clearButton.id = "clearSessionBtn";
+    clearButton.textContent = "NUEVA SESIÓN";
+    clearButton.title = "Vaciar todas las pistas";
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.opus";
+    input.multiple = true;
+    input.hidden = true;
+    input.id = "audioFileInput";
+
+    document.body.appendChild(input);
+    tools.prepend(addButton, clearButton);
+
+    addButton.addEventListener("click", () => input.click());
+    clearButton.addEventListener("click", clearSession);
+
+    input.addEventListener("change", () => {
+      addLocalFiles(input.files);
+      input.value = "";
+    });
+
+    const dropHint = document.createElement("div");
+    dropHint.className = "audio-drop-hint";
+    dropHint.innerHTML =
+      '<strong>SUELTA AQUÍ TUS AUDIOS</strong>' +
+      '<span>MP3 · WAV · M4A · OGG · FLAC</span>' +
+      '<small>Se añadirán alineados desde 00:00</small>';
+
+    viewport.appendChild(dropHint);
+
+    ["dragenter", "dragover"].forEach((type) => {
+      viewport.addEventListener(type, (event) => {
+        if (
+          !Array.from(event.dataTransfer?.items || []).some(
+            (item) => item.kind === "file"
+          )
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        viewport.classList.add("audio-drag-over");
+      });
+    });
+
+    ["dragleave", "drop"].forEach((type) => {
+      viewport.addEventListener(type, (event) => {
+        if (type === "drop") {
+          event.preventDefault();
+
+          const files = Array.from(event.dataTransfer?.files || []).filter(
+            (file) =>
+              file.type.startsWith("audio/") ||
+              /\.(mp3|wav|ogg|m4a|aac|flac|opus)$/i.test(file.name)
+          );
+
+          if (files.length) addLocalFiles(files);
+        }
+
+        viewport.classList.remove("audio-drag-over");
+      });
+    });
+  }
+
+  function addLocalFiles(fileList) {
+    const files = Array.from(fileList || []).filter(
+      (file) =>
+        file.type.startsWith("audio/") ||
+        /\.(mp3|wav|ogg|m4a|aac|flac|opus)$/i.test(file.name)
+    );
+
+    if (!files.length) return;
+
+    const wasPlaying = playing;
+    const firstNewIndex = tracks.length;
+
+    selectedSong = null;
+    soloIndex = null;
+
+    const newTracks = files.map((file, offset) => {
+      const url = URL.createObjectURL(file);
+      localObjectUrls.add(url);
+
+      const baseName = file.name.replace(/\.[^.]+$/, "");
+
+      const meta = {
+        id: `local-${Date.now()}-${offset}`,
+        name: baseName || file.name,
+        originalName: file.name,
+        file: url,
+        localObjectUrl: url,
+        color: colors[(firstNewIndex + offset) % colors.length]
+      };
+
+      return makeTrack(meta, firstNewIndex + offset);
+    });
+
+    tracks.push(...newTracks);
+
+    tracks.forEach((track, index) => {
+      track.index = index;
+    });
+
+    if ($("songSelect")) $("songSelect").value = "";
+    if ($("songTitle")) $("songTitle").textContent = "Sesión local";
+
+    if ($("songMeta")) {
+      $("songMeta").textContent =
+        `${tracks.length} pistas locales · alineadas desde 00:00`;
+    }
+
+    if ($("bpmValue")) {
+      $("bpmValue").innerHTML = '--- <small>BPM</small>';
+    }
+
+    if ($("loadedTracks")) {
+      $("loadedTracks").textContent = `${tracks.length} TRACKS`;
+    }
+
+    renderChannels();
+    renderList();
+    updateVolumes();
+    renderArrangement();
+
+    const thisLoad = songLoadId;
+
+    newTracks.forEach((track) => {
+      try {
+        track.audio.currentTime = 0;
+      } catch (_) {}
+
+      loadWaveform(track, thisLoad);
+
+      if (wasPlaying) {
+        track.audio.play().catch(() => {});
+      }
+    });
+
+    updateDuration();
+  }
+
+  // Inicialización en blanco: no carga automáticamente songs[0].
   populateSelect();
   renderList();
+  setupAudioImport();
+  renderChannels();
+  renderArrangement();
 
-  if (songs.length) {
-    loadSong(songs[0]);
-  } else {
-    renderChannels();
-    renderArrangement();
+  if ($("songTitle")) {
+    $("songTitle").textContent = "Sesión en blanco";
+  }
+
+  if ($("songMeta")) {
+    $("songMeta").textContent =
+      "Arrastra audios al arreglo o pulsa + AÑADIR AUDIOS";
+  }
+
+  if ($("bpmValue")) {
+    $("bpmValue").innerHTML = '--- <small>BPM</small>';
   }
 })();
