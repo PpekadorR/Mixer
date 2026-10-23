@@ -1662,3 +1662,131 @@ footer span {
     padding: 0 7px;
   }
 }
+
+/* ==========================================
+   PPEKADORR · FULL WIDTH INTERFACE
+========================================== */
+
+html {
+  width: 100%;
+  min-width: 0;
+}
+
+body {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+}
+
+main {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 18px 22px;
+  box-sizing: border-box;
+}
+
+.topbar {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.panel,
+.sessionbar,
+.bottom-grid,
+.help-strip,
+.editor,
+.arrangement {
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.bottom-grid {
+  width: 100%;
+}
+
+/* ==========================================
+   MIXER · TODOS LOS FADERS VISIBLES
+========================================== */
+
+.channels {
+  display: grid !important;
+  grid-template-columns: repeat(8, minmax(105px, 1fr));
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 12px;
+  align-items: stretch;
+}
+
+/* Cada canal conserva su diseño */
+
+.channel {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* Evita que los nombres largos rompan la cuadrícula */
+
+.channel-name,
+.channel-header,
+.channel-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Controles del canal */
+
+.channel-buttons {
+  flex-wrap: wrap;
+}
+
+/* Ya no necesitamos desplazarnos por bancos */
+
+.bankbar {
+  display: none !important;
+}
+
+/* ==========================================
+   RESPONSIVE · MÁS CANALES POR FILA
+========================================== */
+
+@media (min-width: 1600px) {
+  .channels {
+    grid-template-columns: repeat(10, minmax(105px, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  main {
+    padding: 14px;
+  }
+
+  .channels {
+    grid-template-columns: repeat(6, minmax(100px, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 850px) {
+  .channels {
+    grid-template-columns: repeat(4, minmax(95px, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  main {
+    padding: 8px;
+  }
+
+  .channels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    padding: 7px;
+  }
+}
