@@ -1,3 +1,4 @@
+
 /* PPEKADORR MULTITRACK CONSOLE
    Reproductor sincronizado + mezclador + formas de onda
 */
@@ -27,7 +28,6 @@
   let soloIndex = null;
   let raf = null;
 
-  // La anchura de la línea de tiempo se expresa en píxeles por segundo.
   let pixelsPerSecond = 60;
   let fitZoom = false;
   let waveformContext = null;
@@ -146,6 +146,7 @@
     if (!select) return;
 
     select.innerHTML = '<option value="">Sesión en blanco</option>';
+
     songs.forEach((song) => {
       const option = document.createElement("option");
       option.value = song.id;
@@ -300,7 +301,6 @@
     updateVolumes();
     renderArrangement();
 
-    // Las formas de onda se cargan por separado para no bloquear el mezclador.
     tracks.forEach((track) => {
       loadWaveform(track, thisLoad);
     });
@@ -308,7 +308,6 @@
 
   /* =========================
      MEZCLADOR
-     Todos los canales visibles simultáneamente.
   ========================= */
 
   function renderChannels() {
@@ -317,7 +316,6 @@
 
     host.innerHTML = "";
 
-    // Ocultar los controles de bancos si existen en el HTML.
     if ($("bankLabel")) {
       $("bankLabel").textContent = `${tracks.length} CANALES`;
     }
@@ -507,7 +505,6 @@
     if (!playing) return;
 
     pausedAt = currentTime();
-
     tracks.forEach((track) => track.audio.pause());
 
     playing = false;
@@ -518,6 +515,13 @@
     }
 
     updatePlayhead(pausedAt);
+
+    document.querySelectorAll(".meter-fill").forEach((meter) => {
+      meter.style.width = "0%";
+    });
+
+    if ($("masterMeterL")) $("masterMeterL").style.width = "0%";
+    if ($("masterMeterR")) $("masterMeterR").style.width = "0%";
   }
 
   function stopAll() {
@@ -531,7 +535,6 @@
 
     playing = false;
     pausedAt = 0;
-
     stopTicker();
 
     if ($("playBtn")) {
@@ -565,8 +568,15 @@
     });
 
     if ($("currentTime")) $("currentTime").textContent = fmt(target);
-
     updatePlayhead(target);
+  }
+
+  // Convierte RMS real a un porcentaje visual.
+  function rmsToMeterPercent(rms) {
+    if (!Number.isFinite(rms) || rms <= 0.0005) return 0;
+
+    const db = 20 * Math.log10(rms);
+    return Math.max(0, Math.min(100, ((db + 66) / 66) * 100));
   }
 
   function tick() {
@@ -585,32 +595,40 @@
       return;
     }
 
-    // Indicadores visuales aproximados del mezclador.
+    // Medidores de canal: señal RMS real después del EQ y del fader.
     tracks.forEach((track, index) => {
       const meter = document.querySelector(
         `[data-track="${index}"] .meter-fill`
       );
 
-      if (meter) {
-        const active =
-          !track.muted && (soloIndex === null || soloIndex === index);
+      if (!meter) return;
 
-        const level = active
-          ? Math.min(
-              100,
-              Math.random() * 65 * Math.min(track.volume, 1) * masterVolume
-            )
+      const active =
+        !track.muted && (soloIndex === null || soloIndex === index);
+
+      const rms =
+        active && window.PekadorEQ?.getTrackMeter
+          ? window.PekadorEQ.getTrackMeter(index)
           : 0;
 
-        meter.style.width = `${level}%`;
-      }
+      meter.style.width = `${rmsToMeterPercent(rms)}%`;
     });
 
+    // Medidores master: señal real después del volumen maestro.
     const left = $("masterMeterL");
     const right = $("masterMeterR");
 
-    if (left) left.style.width = `${Math.random() * 75 * masterVolume}%`;
-    if (right) right.style.width = `${Math.random() * 75 * masterVolume}%`;
+    const master = window.PekadorEQ?.getMasterMeters
+      ? window.PekadorEQ.getMasterMeters()
+      : { left: 0, right: 0 };
+
+    if (left) {
+      left.style.width = `${rmsToMeterPercent(master.left)}%`;
+    }
+
+    if (right) {
+      right.style.width = `${rmsToMeterPercent(master.right)}%`;
+    }
 
     raf = requestAnimationFrame(tick);
   }
@@ -690,7 +708,10 @@
       const canvas = document.createElement("canvas");
       canvas.width = Math.max(1, width);
       canvas.height = 66;
-      canvas.setAttribute("aria-label", `Forma de onda: ${name.textContent}`);
+      canvas.setAttribute(
+        "aria-label",
+        `Forma de onda: ${name.textContent}`
+      );
 
       row.appendChild(canvas);
 
@@ -724,8 +745,6 @@
     }
 
     ruler.style.cursor = "crosshair";
-
-    // Evita acumular eventos al redibujar la regla.
     ruler.onclick = onRulerClick;
     ruler.dataset.pxPerSec = String(pxPerSec);
 
@@ -778,44 +797,69 @@
     playhead.style.left = `${Math.max(0, time) * pxPerSec}px`;
   }
 
+  // Dibuja una silueta continua usando picos extraídos del audio real.
   function drawWaveform(canvas, peaks, width, color) {
     const height = 66;
     const dpr = Math.max(1, window.devicePixelRatio || 1);
 
     canvas.width = Math.max(1, Math.floor(width * dpr));
-    canvas.height = Math.floor(height * dpr);
+    canvas.height = Math.max(1, Math.floor(height * dpr));
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
 
     const ctx = canvas.getContext("2d");
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, width, height);
 
-    // Línea central.
+    const center = height / 2;
+
     ctx.strokeStyle = "#343c46";
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(0, height / 2);
-    ctx.lineTo(width, height / 2);
+    ctx.moveTo(0, center);
+    ctx.lineTo(width, center);
     ctx.stroke();
 
-    if (!peaks || !peaks.length) return;
+    if (!peaks || !peaks.length || width <= 0) return;
 
     const step = width / peaks.length;
+    const maxAmp = height * 0.44;
 
-    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(0, center);
+
+    for (let i = 0; i < peaks.length; i++) {
+      const x = i * step;
+      const amp = Math.max(0, Math.min(1, peaks[i])) * maxAmp;
+      ctx.lineTo(x, center - amp);
+    }
+
+    ctx.lineTo(width, center);
+
+    for (let i = peaks.length - 1; i >= 0; i--) {
+      const x = i * step;
+      const amp = Math.max(0, Math.min(1, peaks[i])) * maxAmp;
+      ctx.lineTo(x, center + amp);
+    }
+
+    ctx.closePath();
+    ctx.fillStyle = color;
     ctx.globalAlpha = 0.88;
-    ctx.lineWidth = Math.max(1, step * 0.75);
+    ctx.fill();
+
     ctx.beginPath();
 
     for (let i = 0; i < peaks.length; i++) {
       const x = i * step;
-      const amp = peaks[i] * (height * 0.43);
+      const amp = Math.max(0, Math.min(1, peaks[i])) * maxAmp;
 
-      ctx.moveTo(x, height / 2 - amp);
-      ctx.lineTo(x, height / 2 + amp);
+      if (i === 0) ctx.moveTo(x, center - amp);
+      else ctx.lineTo(x, center - amp);
     }
 
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.7;
+    ctx.globalAlpha = 0.65;
     ctx.stroke();
     ctx.globalAlpha = 1;
   }
@@ -952,7 +996,6 @@
     });
   }
 
-  // Los controles de banco se mantienen inactivos por compatibilidad con el HTML.
   if ($("prevBank")) $("prevBank").hidden = true;
   if ($("nextBank")) $("nextBank").hidden = true;
 
@@ -968,12 +1011,11 @@
     $("zoomFit").addEventListener("click", zoomToFit);
   }
 
-  // Mantener el ancho y la regla actualizados al cambiar el tamaño de ventana.
   window.addEventListener("resize", () => {
     renderArrangement();
   });
 
-  // Importación local: los archivos permanecen en el navegador y no se suben.
+  // Importación local: los archivos se mantienen en el navegador.
   function setupAudioImport() {
     const tools = document.querySelector(".arrangement-tools");
     const viewport = $("arrangementViewport") || $("arrangement");
@@ -1014,9 +1056,9 @@
     const dropHint = document.createElement("div");
     dropHint.className = "audio-drop-hint";
     dropHint.innerHTML =
-      '<strong>SUELTA AQUÍ TUS AUDIOS</strong>' +
-      '<span>MP3 · WAV · M4A · OGG · FLAC</span>' +
-      '<small>Se añadirán alineados desde 00:00</small>';
+      "<strong>SUELTA AQUÍ TUS AUDIOS</strong>" +
+      "<span>MP3 · WAV · M4A · OGG · FLAC</span>" +
+      "<small>Se añadirán alineados desde 00:00</small>";
 
     viewport.appendChild(dropHint);
 
@@ -1131,7 +1173,7 @@
     updateDuration();
   }
 
-  // Inicialización en blanco: no carga automáticamente songs[0].
+  // Inicialización en blanco: no carga automáticamente la primera canción.
   populateSelect();
   renderList();
   setupAudioImport();
