@@ -17,16 +17,38 @@
   box-sizing: border-box;
 }
 
-html {
-  min-height: 100%;
-  scroll-behavior: smooth;
+html,
+body {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
 }
 
 body {
-  margin: 0;
-  background: linear-gradient(180deg, #1b1e24 0, #101216 260px);
+  background: linear-gradient(
+    180deg,
+    #1b1e24 0,
+    #101216 260px
+  );
   color: var(--text);
   font: 13px Inter, Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
 /* =========================
@@ -34,11 +56,13 @@ body {
 ========================= */
 
 .topbar {
+  width: 100%;
   min-height: 76px;
+  height: auto;
   display: flex;
   align-items: center;
   gap: 28px;
-  padding: 12px max(18px, calc((100vw - 1240px) / 2));
+  padding: 12px 22px;
   background: #17191e;
   border-bottom: 1px solid #353942;
   box-shadow: 0 4px 16px #0005;
@@ -48,27 +72,26 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 280px;
+  min-width: 0;
 }
 
 .brand-icon {
   width: 43px;
   height: 43px;
+  flex-shrink: 0;
   display: grid;
   place-items: center;
   border: 2px solid var(--green);
   border-radius: 7px;
   color: var(--green);
-  font: 800 30px "Barlow Condensed", sans-serif;
-  font-style: italic;
+  font: italic 800 30px "Barlow Condensed", sans-serif;
   box-shadow: inset 0 0 14px #a5e65a12;
-  flex-shrink: 0;
 }
 
 .brand h1 {
+  margin: 0;
   font: 800 18px "Barlow Condensed", sans-serif;
   letter-spacing: 1.3px;
-  margin: 0;
 }
 
 .brand h1 span {
@@ -83,39 +106,37 @@ body {
 }
 
 .brand p {
+  margin: 4px 0 0;
+  color: #7f8793;
   font-size: 9px;
   letter-spacing: 2px;
-  color: #7f8793;
-  margin: 4px 0 0;
 }
-
-/* =========================
-   SELECTOR DE SESIÓN
-========================= */
 
 .session-control {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-left: auto;
+  min-width: 0;
 }
 
 .session-control label,
 .micro,
 .master-control label {
+  color: var(--muted);
   font-size: 9px;
   letter-spacing: 1.5px;
   font-weight: 700;
-  color: var(--muted);
 }
 
 select {
+  min-width: 210px;
+  max-width: 100%;
+  padding: 10px 30px 10px 12px;
   background: #292d35;
   border: 1px solid #4a505b;
-  color: #f2f4f7;
   border-radius: 5px;
-  padding: 10px 30px 10px 12px;
-  min-width: 210px;
+  color: #f2f4f7;
   font: 600 12px Inter, sans-serif;
   outline: none;
 }
@@ -125,9 +146,9 @@ select:focus {
 }
 
 .online {
+  color: #aeb5bf;
   font: 700 9px "Barlow Condensed", sans-serif;
   letter-spacing: 1.5px;
-  color: #aeb5bf;
   white-space: nowrap;
 }
 
@@ -136,22 +157,35 @@ select:focus {
   display: inline-block;
   width: 7px;
   height: 7px;
+  margin-right: 7px;
   border-radius: 50%;
   background: var(--green);
   box-shadow: 0 0 9px #a5e65a66;
-  margin-right: 7px;
 }
 
 /* =========================
-   CONTENIDO PRINCIPAL
+   CONTENIDO A TODO EL ANCHO
 ========================= */
 
 main {
-  max-width: 1240px;
-  margin: 18px auto;
-  padding: 0 18px;
   display: grid;
   gap: 13px;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  padding: 18px;
+}
+
+.panel,
+.sessionbar,
+.bottom-grid,
+.help-strip,
+.arrangement,
+.editor {
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
 }
 
 /* =========================
@@ -162,24 +196,29 @@ main {
   display: flex;
   align-items: center;
   gap: 0;
-  background: linear-gradient(180deg, #2b2f37, #20232a);
+  width: 100%;
+  min-height: 94px;
+  background: linear-gradient(
+    180deg,
+    #2b2f37,
+    #20232a
+  );
   border: 1px solid #454b56;
   border-radius: 8px;
-  min-height: 94px;
   box-shadow: 0 6px 18px #0003;
 }
 
 .session-title {
-  padding: 16px 20px;
   display: flex;
   align-items: center;
-  min-width: 300px;
-  flex: 1;
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 16px 20px;
 }
 
 .session-title h2 {
-  font-size: 17px;
   margin: 3px 0 4px;
+  font-size: 17px;
   font-weight: 700;
 }
 
@@ -195,14 +234,14 @@ main {
 }
 
 .readout {
-  height: 65px;
-  min-width: 130px;
-  padding: 8px 20px;
-  border-left: 1px solid #414650;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 6px;
+  min-width: 105px;
+  height: 65px;
+  padding: 8px 16px;
+  border-left: 1px solid #414650;
 }
 
 .readout strong {
@@ -211,12 +250,12 @@ main {
 }
 
 .readout strong small {
-  font: 600 10px Inter, sans-serif;
   color: var(--muted);
+  font: 600 10px Inter, sans-serif;
 }
 
 .time-readout {
-  min-width: 170px;
+  min-width: 150px;
 }
 
 .time-readout strong {
@@ -225,17 +264,12 @@ main {
 }
 
 .time-readout > small {
-  font-size: 9px;
   color: #8f98a5;
+  font-size: 9px;
 }
-
-/* =========================
-   BOTONES PLAY / STOP
-========================= */
 
 .session-actions {
   display: flex;
-  align-items: center;
   gap: 7px;
   padding: 0 16px;
   border-left: 1px solid #414650;
@@ -244,40 +278,29 @@ main {
 .session-actions button {
   width: 36px;
   height: 36px;
-  border: 1px solid #555b65;
   background: #333842;
-  color: #e8ebef;
+  border: 1px solid #555b65;
   border-radius: 5px;
+  color: #e8ebef;
   font-size: 17px;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.session-actions button:hover {
-  background: #454b56;
-  border-color: #858d99;
 }
 
 .session-actions .play {
+  width: 43px;
+  height: 43px;
   background: var(--green);
   border-color: var(--green);
   color: #171a1e;
-  width: 43px;
-  height: 43px;
-}
-
-.session-actions .play:hover {
-  background: #b8f477;
 }
 
 .play-icon {
   display: inline-block;
   width: 0;
   height: 0;
+  margin-left: 3px;
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
   border-left: 12px solid currentColor;
-  margin-left: 3px;
 }
 
 .pause-icon {
@@ -293,21 +316,29 @@ main {
 ========================= */
 
 .panel {
-  background: linear-gradient(180deg, #22252c, #1a1d23);
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    #22252c,
+    #1a1d23
+  );
   border: 1px solid #3b4049;
   border-radius: 7px;
   box-shadow: 0 8px 18px #0002;
-  overflow: hidden;
 }
 
 .panel-head {
-  min-height: 42px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  min-height: 42px;
   padding: 8px 14px;
-  background: linear-gradient(180deg, #30343d, #262a31);
+  background: linear-gradient(
+    180deg,
+    #30343d,
+    #262a31
+  );
   border-bottom: 1px solid #424752;
   color: #dbe0e7;
   font: 700 11px "Barlow Condensed", sans-serif;
@@ -323,8 +354,9 @@ main {
 .section-dot {
   width: 7px;
   height: 7px;
-  border-radius: 2px;
+  flex-shrink: 0;
   background: var(--blue);
+  border-radius: 2px;
 }
 
 .section-dot.amber {
@@ -343,20 +375,24 @@ main {
 }
 
 .view-tag {
+  padding: 5px 7px;
   border: 1px solid #505661;
   border-radius: 3px;
-  padding: 5px 7px;
   color: #aeb5c0;
   font-size: 9px;
 }
 
 /* =========================
-   REGLA DE CANALES
+   REGLA DE PISTAS
 ========================= */
 
 .track-ruler {
   display: grid;
-  grid-template-columns: minmax(110px, 1.2fr) 1fr 72px 70px;
+  grid-template-columns:
+    minmax(110px, 1.2fr)
+    1fr
+    72px
+    70px;
   gap: 10px;
   padding: 9px 13px;
   background: #171a1f;
@@ -367,103 +403,132 @@ main {
 }
 
 /* =========================
-   MEZCLADOR DE CANALES
+   MEZCLADOR: TODOS LOS FADERS
 ========================= */
 
 .channels {
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 5px;
-  padding: 8px;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
   background: #14171c;
+  box-sizing: border-box;
 }
 
 .channel {
   --channel: #a5e65a;
-  min-width: 0;
+
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+
+  overflow: hidden;
+  padding: 0 7px 9px;
+
+  background: linear-gradient(
+    180deg,
+    #30343c,
+    #252930
+  );
+
   border: 1px solid #444a55;
   border-radius: 4px;
-  overflow: hidden;
-  background: linear-gradient(180deg, #30343c, #252930);
-  padding: 0 7px 9px;
 }
 
 .channel:before {
   content: "";
-  height: 3px;
-  background: var(--channel);
   display: block;
+  height: 3px;
   margin: 0 -7px 7px;
+  background: var(--channel);
+  flex-shrink: 0;
 }
 
 .channel-top {
   display: flex;
   align-items: center;
   gap: 5px;
+  min-width: 0;
 }
 
 .channel-num {
-  font: 700 10px "Barlow Condensed", sans-serif;
-  color: #a4acb7;
-  background: #1a1d22;
+  flex-shrink: 0;
   padding: 3px 5px;
+  background: #1a1d22;
   border-radius: 2px;
+  color: #a4acb7;
+  font: 700 10px "Barlow Condensed", sans-serif;
 }
 
 .channel-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: #edf0f4;
   font: 700 11px "Barlow Condensed", sans-serif;
   letter-spacing: 0.6px;
-  white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
-  flex: 1;
+  white-space: nowrap;
 }
 
 .channel-file {
-  font-size: 8px;
-  color: #8b94a1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 5px 0 8px;
+  min-width: 0;
   min-height: 10px;
+  overflow: hidden;
+  margin: 5px 0 8px;
+  color: #8b94a1;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .meter-label {
   display: flex;
   justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 4px;
   color: #858e9a;
   font: 8px "Barlow Condensed", sans-serif;
-  margin-bottom: 4px;
+}
+
+.peak-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .meter {
   height: 7px;
+  overflow: hidden;
   background: #111419;
   border: 1px solid #414650;
   border-radius: 1px;
-  overflow: hidden;
 }
 
 .meter-fill {
-  height: 100%;
   width: 0;
-  background: linear-gradient(90deg, #6bba45, #b5ee61 70%, #f4d05b);
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #6bba45,
+    #b5ee61 70%,
+    #f4d05b
+  );
   transition: width 0.06s;
 }
 
-/* =========================
-   FADER DE VOLUMEN
-========================= */
-
 .fader-zone {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   gap: 7px;
   height: 142px;
   margin: 6px 0 2px;
@@ -473,10 +538,10 @@ main {
 }
 
 .scale {
-  height: 123px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 123px;
   color: #7e8794;
   font: 8px "Barlow Condensed", sans-serif;
 }
@@ -488,44 +553,36 @@ main {
   direction: rtl;
   width: 25px;
   height: 124px;
-  accent-color: var(--channel);
+  margin: 0;
   background: transparent;
+  accent-color: var(--channel);
   cursor: pointer;
 }
 
 .db-value {
+  margin: 5px 0 8px;
+  color: #e0e5ec;
   text-align: center;
   font: 700 11px "Barlow Condensed", sans-serif;
-  color: #e0e5ec;
-  margin: 5px 0 8px;
   font-variant-numeric: tabular-nums;
 }
 
-/* =========================
-   BOTONES MUTE / SOLO / EQ
-========================= */
-
 .channel-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 4px;
-  width: 100%;
+  min-width: 0;
 }
 
 .channel-buttons button {
-  flex: 1 1 0;
+  flex: 1 1 35px;
   min-width: 0;
+  padding: 5px 2px;
   background: #3b4049;
   border: 1px solid #565d68;
   border-radius: 3px;
-  padding: 6px 2px;
   color: #c0c6cf;
   font: 800 9px "Barlow Condensed", sans-serif;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
-
-.channel-buttons button:hover {
-  background: #4a505b;
 }
 
 .channel-buttons button.active-mute {
@@ -540,17 +597,6 @@ main {
   color: #16191d;
 }
 
-.channel-buttons button[data-eq-track] {
-  background: #263844;
-  border-color: #4c829e;
-  color: #8bd4ff;
-}
-
-.channel-buttons button[data-eq-track]:hover {
-  background: #345366;
-  border-color: #8bd4ff;
-}
-
 .channel.disabled-channel {
   opacity: 0.42;
 }
@@ -559,60 +605,30 @@ main {
   width: 0;
 }
 
-/* =========================
-   CONTROLES DE BANCO
-========================= */
+/* Ocultar los bancos: ahora se ven todas las pistas. */
 
 .bankbar {
-  min-height: 39px;
-  padding: 7px 13px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  background: #20232a;
-  border-top: 1px solid #3b4049;
-  color: #8f98a5;
-  font: 700 9px "Barlow Condensed", sans-serif;
-  letter-spacing: 1px;
-}
-
-.bankbar button {
-  background: #30353e;
-  border: 1px solid #4c535e;
-  color: #d4d9e0;
-  padding: 6px 9px;
-  border-radius: 3px;
-  margin-left: 5px;
-  font: 700 9px "Barlow Condensed", sans-serif;
-  cursor: pointer;
-}
-
-.bankbar button:hover {
-  background: #414751;
-}
-
-.bankbar button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
+  display: none !important;
 }
 
 /* =========================
-   BIBLIOTECA DE CANCIONES
+   LISTA DE CANCIONES Y MASTER
 ========================= */
 
 .bottom-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.65fr) minmax(250px, 1fr);
+  grid-template-columns:
+    minmax(0, 1.65fr)
+    minmax(250px, 1fr);
   gap: 13px;
 }
 
 .song-list {
-  padding: 8px;
   display: grid;
   gap: 5px;
   max-height: 210px;
   overflow: auto;
+  padding: 8px;
 }
 
 .song-row {
@@ -625,37 +641,36 @@ main {
   border: 1px solid #3a4049;
   border-radius: 4px;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
 }
 
 .song-row:hover,
 .song-row.selected {
-  border-color: var(--green);
   background: #2b302c;
+  border-color: var(--green);
 }
 
 .song-index {
-  width: 25px;
-  height: 25px;
   display: grid;
   place-items: center;
+  width: 25px;
+  height: 25px;
   background: #171a1f;
   color: var(--green);
   font: 700 11px "Barlow Condensed", sans-serif;
 }
 
 .song-name {
-  font-weight: 700;
-  font-size: 11px;
-  white-space: nowrap;
   overflow: hidden;
+  font-size: 11px;
+  font-weight: 700;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .song-detail {
-  font-size: 9px;
-  color: #8e97a4;
   margin-top: 4px;
+  color: #8e97a4;
+  font-size: 9px;
 }
 
 .song-bpm {
@@ -665,30 +680,26 @@ main {
 }
 
 .track-count {
-  font: 700 9px "Barlow Condensed", sans-serif;
-  color: #b7bec8;
-  border: 1px solid #4a505b;
   padding: 5px 6px;
+  border: 1px solid #4a505b;
   border-radius: 3px;
-  white-space: nowrap;
+  color: #b7bec8;
+  font: 700 9px "Barlow Condensed", sans-serif;
   text-align: center;
+  white-space: nowrap;
 }
 
 .subtle {
-  font-size: 9px;
   color: #8e97a4;
+  font-size: 9px;
 }
 
 .library-note {
-  padding: 0 12px 12px;
   margin: 0;
+  padding: 0 12px 12px;
   color: #7e8794;
   font-size: 10px;
 }
-
-/* =========================
-   MASTER
-========================= */
 
 .master {
   min-height: 180px;
@@ -703,21 +714,21 @@ main {
 .master-meter > div {
   display: flex;
   align-items: center;
-  gap: 8px;
   flex: 1;
+  gap: 8px;
   color: #9da5b0;
   font: 700 9px "Barlow Condensed", sans-serif;
 }
 
 .master-meter .meter {
-  height: 12px;
   flex: 1;
+  height: 12px;
 }
 
 .master-meter .meter i {
   display: block;
-  height: 100%;
   width: 0;
+  height: 100%;
   background: linear-gradient(
     90deg,
     #72c94c 0 65%,
@@ -727,44 +738,43 @@ main {
 }
 
 .master-control {
-  padding: 10px 18px;
   display: grid;
   grid-template-columns: 1fr 2fr auto;
   align-items: center;
   gap: 12px;
+  padding: 10px 18px;
 }
 
 .master-control input {
   width: 100%;
   accent-color: var(--green);
-  cursor: pointer;
 }
 
 .master-control strong {
-  font: 700 12px "Barlow Condensed", sans-serif;
   color: var(--green);
+  font: 700 12px "Barlow Condensed", sans-serif;
 }
 
 .master-note {
-  font-size: 9px;
-  color: #818a97;
   padding: 0 18px 15px;
+  color: #818a97;
+  font-size: 9px;
   line-height: 1.5;
 }
 
 /* =========================
-   AYUDA
+   AYUDA Y PIE
 ========================= */
 
 .help-strip {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+  padding: 11px 14px;
   background: #191c22;
   border: 1px solid #343943;
   border-radius: 5px;
-  padding: 11px 14px;
   color: #929aa6;
   font-size: 10px;
 }
@@ -776,42 +786,36 @@ main {
 }
 
 .help-strip code {
-  color: #d6dce4;
-  background: #262a32;
   padding: 5px 7px;
+  background: #262a32;
   border-radius: 3px;
+  color: #d6dce4;
 }
 
 .help-strip b {
   color: #dbe0e7;
 }
 
-/* =========================
-   PIE DE PÁGINA
-========================= */
-
 footer {
-  text-align: center;
   padding: 12px 10px 24px;
   color: #69717e;
   font: 700 9px "Barlow Condensed", sans-serif;
   letter-spacing: 1.7px;
+  text-align: center;
 }
 
 footer span {
   color: var(--green);
 }
 
-/* ==================================================
-   ECUALIZADOR DE 8 BANDAS
-================================================== */
+/* =========================
+   ECUALIZADOR
+========================= */
 
-/* Evita que el modal aparezca cuando está oculto. */
 .eq-modal[hidden] {
   display: none !important;
 }
 
-/* Fondo del ecualizador. */
 .eq-modal {
   position: fixed;
   inset: 0;
@@ -820,23 +824,19 @@ footer span {
   place-items: center;
   padding: 16px;
   background: rgba(0, 0, 0, 0.78);
-  overflow-y: auto;
 }
 
-/* Ventana principal. */
 .eq-window {
   width: min(620px, 100%);
-  max-height: 95vh;
-  overflow-y: auto;
-  color: #edf2f7;
+  max-width: 100%;
+  padding: 16px;
   background: #191d21;
   border: 1px solid #49515a;
   border-radius: 10px;
-  padding: 16px;
+  color: #edf2f7;
   box-shadow: 0 20px 70px #000b;
 }
 
-/* Encabezado y pie. */
 .eq-header,
 .eq-footer {
   display: flex;
@@ -850,9 +850,9 @@ footer span {
 }
 
 .eq-header h2 {
+  margin: 0 0 5px;
   font-size: 15px;
   letter-spacing: 1px;
-  margin: 0 0 5px;
 }
 
 #eq-track-name {
@@ -860,35 +860,14 @@ footer span {
   font-size: 11px;
 }
 
-/* Botón de cerrar y controles del ecualizador. */
-.eq-header button,
-.eq-footer button {
-  color: #edf2f7;
-  background: #2a3036;
-  border: 1px solid #48515a;
-  border-radius: 5px;
-  padding: 9px 12px;
-  cursor: pointer;
-  font: 600 11px Inter, sans-serif;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.eq-header button:hover,
-.eq-footer button:hover {
-  background: #39424a;
-  border-color: #71808c;
-}
-
-/* Escala de decibelios. */
 .eq-scale {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 8px;
   color: #929eaa;
   font-size: 10px;
-  margin-bottom: 8px;
 }
 
-/* Contenedor de las ocho bandas. */
 .eq-bands {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -899,7 +878,6 @@ footer span {
   border-radius: 6px;
 }
 
-/* Banda individual. */
 .eq-band {
   display: flex;
   flex-direction: column;
@@ -912,26 +890,21 @@ footer span {
   color: #8bd4ff;
   font-size: 10px;
   white-space: nowrap;
-  font-variant-numeric: tabular-nums;
 }
 
-/* Deslizador vertical de cada frecuencia. */
 .eq-fader {
   appearance: none;
   -webkit-appearance: none;
   writing-mode: vertical-lr;
   direction: rtl;
   width: 26px;
-  max-width: 100%;
   height: 170px;
   margin: 0;
   background: transparent;
   cursor: ns-resize;
-  touch-action: pan-x;
-  accent-color: var(--blue);
+  touch-action: none;
 }
 
-/* Carril para navegadores WebKit. */
 .eq-fader::-webkit-slider-runnable-track {
   width: 4px;
   background: linear-gradient(
@@ -943,70 +916,80 @@ footer span {
   border-radius: 3px;
 }
 
-/* Control deslizante para navegadores WebKit. */
 .eq-fader::-webkit-slider-thumb {
   appearance: none;
   -webkit-appearance: none;
   width: 24px;
   height: 12px;
   margin-left: -10px;
+  background: linear-gradient(#e4e8ec, #747e88);
   border: 1px solid #e1e6eb;
   border-radius: 2px;
-  background: linear-gradient(#e4e8ec, #747e88);
   box-shadow: 0 2px 4px #000;
 }
 
-/* Carril para Firefox. */
 .eq-fader::-moz-range-track {
   width: 4px;
   background: #454e57;
-  border-radius: 3px;
 }
 
-/* Control deslizante para Firefox. */
 .eq-fader::-moz-range-thumb {
   width: 22px;
   height: 10px;
+  background: linear-gradient(#e4e8ec, #747e88);
   border: 1px solid #e1e6eb;
   border-radius: 2px;
-  background: linear-gradient(#e4e8ec, #747e88);
 }
 
-/* Etiquetas de frecuencia. */
 .eq-band label {
   color: #c8d0d8;
   font-size: 10px;
-  text-align: center;
 }
 
-/* Separación del pie. */
 .eq-footer {
   margin-top: 16px;
 }
 
-/* Botón de bypass cuando está activado. */
+.eq-footer button,
+.eq-header button {
+  padding: 9px 12px;
+  background: #2a3036;
+  border: 1px solid #48515a;
+  border-radius: 5px;
+  color: #edf2f7;
+  cursor: pointer;
+}
+
 #eq-bypass.active {
   background: #8c4c18;
   border-color: #e99a4b;
-  color: #fff0df;
 }
 
-/* Foco visible para accesibilidad. */
-.channel-buttons button:focus-visible,
-.eq-header button:focus-visible,
-.eq-footer button:focus-visible,
-.session-actions button:focus-visible {
-  outline: 2px solid var(--green);
-  outline-offset: 2px;
+/* =========================
+   RESPONSIVE: PANTALLAS GRANDES
+========================= */
+
+@media (min-width: 1600px) {
+  .channels {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
 }
 
-/* ==================================================
-   TABLET
-================================================== */
+/* Portátiles y tabletas */
 
-@media (max-width: 950px) {
-  .brand {
-    min-width: 0;
+@media (max-width: 1100px) {
+  main {
+    padding: 12px;
+  }
+
+  .topbar {
+    gap: 16px;
+    padding: 12px 16px;
+  }
+
+  .channels {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .brand h1 small {
@@ -1018,44 +1001,84 @@ footer span {
     display: none;
   }
 
-  .channels {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .channel {
-    min-height: 230px;
-  }
-
   .session-title {
-    min-width: 220px;
+    flex-basis: 200px;
   }
 
   .readout {
-    min-width: 105px;
     padding: 8px 12px;
   }
 
   .time-readout {
-    min-width: 145px;
+    min-width: 130px;
   }
 }
 
-/* ==================================================
-   MÓVILES
-================================================== */
+/* Móviles en horizontal o tabletas pequeñas */
 
-@media (max-width: 620px) {
+@media (max-width: 760px) {
   .topbar {
-    height: auto;
-    min-height: 76px;
-    padding: 12px;
-    gap: 10px;
     flex-wrap: wrap;
-    align-items: flex-start;
+    gap: 10px;
   }
 
   .brand {
     flex: 1;
+  }
+
+  .session-control {
+    margin-left: 0;
+  }
+
+  .channels {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+    padding: 8px;
+  }
+
+  .channel {
+    min-height: 220px;
+  }
+
+  .sessionbar {
+    flex-wrap: wrap;
+  }
+
+  .session-title {
+    flex: 1 1 100%;
+    padding: 14px;
+  }
+
+  .readout {
+    flex: 1;
+    border-top: 1px solid #414650;
+    border-left: 0;
+  }
+
+  .session-actions {
+    flex: 1;
+    justify-content: flex-end;
+    padding: 8px 12px;
+    border-top: 1px solid #414650;
+    border-left: 0;
+  }
+
+  .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Móviles */
+
+@media (max-width: 480px) {
+  main {
+    gap: 9px;
+    padding: 6px;
+  }
+
+  .topbar {
+    align-items: flex-start;
+    padding: 12px;
   }
 
   .brand h1 {
@@ -1064,7 +1087,6 @@ footer span {
 
   .session-control {
     width: 100%;
-    margin: 0;
     justify-content: space-between;
   }
 
@@ -1073,45 +1095,10 @@ footer span {
     min-width: 0;
   }
 
-  main {
-    margin: 12px auto;
-    padding: 0 10px;
-    gap: 10px;
-  }
-
-  .sessionbar {
-    flex-wrap: wrap;
-  }
-
-  .session-title {
-    width: 100%;
-    min-width: 0;
-    padding: 14px;
-  }
-
-  .readout {
-    flex: 1;
-    min-width: 0;
-    border-top: 1px solid #414650;
-    border-left: 0;
-    padding: 10px 14px;
-  }
-
-  .time-readout {
-    min-width: 0;
-  }
-
-  .session-actions {
-    border-top: 1px solid #414650;
-    border-left: 0;
-    flex: 1;
-    justify-content: flex-end;
-    padding: 8px 12px;
-  }
-
   .channels {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
+    padding: 6px;
   }
 
   .channel {
@@ -1119,13 +1106,13 @@ footer span {
   }
 
   .track-ruler {
-    grid-template-columns: minmax(100px, 1fr) 1fr 50px 56px;
+    grid-template-columns:
+      minmax(70px, 1fr)
+      1fr
+      45px
+      45px;
     gap: 5px;
     font-size: 8px;
-  }
-
-  .bottom-grid {
-    grid-template-columns: 1fr;
   }
 
   .song-row {
@@ -1143,67 +1130,23 @@ footer span {
   }
 
   .help-strip {
-    align-items: flex-start;
     flex-direction: column;
+    align-items: flex-start;
     gap: 7px;
   }
 
-  .bankbar {
-    align-items: flex-start;
-    flex-direction: column;
-    padding: 10px;
-  }
-
-  .bankbar button {
-    margin: 4px 4px 0 0;
-  }
-
-  .master-control {
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-  }
-
-  .master-control input {
-    grid-column: 1 / -1;
-    grid-row: 2;
-  }
-
-  /* Ajustes del ecualizador en móviles. */
-  .eq-modal {
-    padding: 8px;
-    overflow-y: auto;
-  }
-
   .eq-window {
-    width: 100%;
-    max-height: 95vh;
     padding: 10px;
-    overflow-y: auto;
-  }
-
-  .eq-header {
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-  }
-
-  .eq-header h2 {
-    font-size: 13px;
   }
 
   .eq-bands {
-    grid-template-columns: repeat(8, minmax(0, 1fr));
     gap: 1px;
-    padding: 12px 1px;
-  }
-
-  .eq-band {
-    gap: 8px;
+    padding-inline: 1px;
   }
 
   .eq-fader {
-    height: 145px;
     width: 22px;
+    height: 145px;
   }
 
   .eq-fader::-webkit-slider-thumb {
@@ -1214,579 +1157,5 @@ footer span {
   .eq-value,
   .eq-band label {
     font-size: 9px;
-  }
-
-  .eq-footer {
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .eq-footer button {
-    flex: 1;
-    padding: 9px 6px;
-  }
-}
-
-/* ==================================================
-   MÓVILES PEQUEÑOS
-================================================== */
-
-@media (max-width: 360px) {
-  .brand-icon {
-    width: 36px;
-    height: 36px;
-    font-size: 25px;
-  }
-
-  .brand h1 {
-    font-size: 14px;
-  }
-
-  .channels {
-    gap: 4px;
-    padding: 5px;
-  }
-
-  .channel {
-    padding: 0 5px 7px;
-  }
-
-  .channel:before {
-    margin-left: -5px;
-    margin-right: -5px;
-  }
-
-  .channel-buttons {
-    gap: 3px;
-  }
-
-  .channel-buttons button {
-    font-size: 8px;
-    padding: 6px 1px;
-  }
-
-  .eq-window {
-    padding: 8px;
-  }
-
-  .eq-bands {
-    gap: 0;
-  }
-
-  .eq-fader {
-    width: 19px;
-    height: 135px;
-  }
-
-  .eq-band label,
-  .eq-value {
-    font-size: 8px;
-  }
-}
-
-/* ==================================================
-   PREFERENCIAS DE MOVIMIENTO
-================================================== */
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
-}
-
-/* =========================================
-   PPEKADORR · MULTITRACK ARRANGEMENT
-========================================= */
-
-.arrangement {
-  margin-bottom: 22px;
-  overflow: hidden;
-  min-width: 0;
-}
-
-.arrangement-tools {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.arrangement-tools > span:first-child {
-  color: var(--green);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  margin-right: 8px;
-}
-
-.arrangement-tools button {
-  min-width: 30px;
-  height: 29px;
-  padding: 0 9px;
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  background: var(--panel2);
-  color: var(--text);
-  cursor: pointer;
-  font-weight: 800;
-}
-
-.arrangement-tools button:hover {
-  border-color: var(--green);
-  color: var(--green);
-}
-
-#zoomValue {
-  min-width: 42px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.arrangement-legend {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 9px;
-  letter-spacing: .6px;
-}
-
-.arrangement-legend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.legend-wave {
-  display: inline-block;
-  width: 16px;
-  height: 10px;
-  border-radius: 2px;
-  background: var(--green);
-}
-
-.legend-playhead {
-  display: inline-block;
-  width: 2px;
-  height: 13px;
-  background: var(--red);
-}
-
-.arrangement-viewport {
-  display: grid;
-  grid-template-columns: 180px minmax(0, 1fr);
-  min-width: 0;
-  background: #15181d;
-}
-
-.arrangement-labels {
-  position: relative;
-  z-index: 3;
-  background: #1a1d23;
-  border-right: 1px solid var(--line);
-}
-
-.arrangement-label-heading {
-  display: flex;
-  align-items: center;
-  height: 38px;
-  padding: 0 12px;
-  border-bottom: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-.arrangement-track-label {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  height: 67px;
-  padding: 0 12px;
-  overflow: hidden;
-  border-bottom: 1px solid #30343c;
-  border-left: 3px solid var(--track-color, var(--green));
-}
-
-.arrangement-track-label strong {
-  overflow: hidden;
-  color: var(--text);
-  font-size: 11px;
-  font-weight: 800;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.arrangement-track-label small {
-  overflow: hidden;
-  color: var(--muted);
-  font-size: 9px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.arrangement-scroll {
-  position: relative;
-  min-width: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-color: #444b56 #181b20;
-  scrollbar-width: thin;
-}
-
-.arrangement-content {
-  position: relative;
-  min-width: 100%;
-  width: max-content;
-}
-
-.timeline-ruler {
-  position: relative;
-  height: 38px;
-  overflow: hidden;
-  border-bottom: 1px solid var(--line);
-  background-color: #20242b;
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent 0,
-    transparent 59px,
-    rgba(255,255,255,.035) 60px
-  );
-  cursor: crosshair;
-}
-
-.timeline-mark {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  border-left: 1px solid #505661;
-  pointer-events: none;
-}
-
-.timeline-mark span {
-  display: block;
-  padding: 5px 0 0 5px;
-  color: #aeb6c1;
-  font-size: 10px;
-  white-space: nowrap;
-}
-
-.arrangement-tracks {
-  position: relative;
-  width: max-content;
-}
-
-.arrangement-track {
-  position: relative;
-  height: 67px;
-  overflow: hidden;
-  border-bottom: 1px solid #30343c;
-  background-color: #191d23;
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent 0,
-    transparent 59px,
-    rgba(255,255,255,.025) 60px
-  );
-  cursor: crosshair;
-}
-
-.arrangement-track:nth-child(even) {
-  background-color: #1c2026;
-}
-
-.arrangement-track canvas {
-  display: block;
-  position: relative;
-  z-index: 1;
-  max-width: none;
-  pointer-events: none;
-}
-
-.arrangement-track.loading::after {
-  content: "ANALIZANDO AUDIO…";
-  position: absolute;
-  top: 26px;
-  left: 12px;
-  z-index: 2;
-  color: #77818e;
-  font-size: 9px;
-  letter-spacing: 1px;
-  pointer-events: none;
-}
-
-.arrangement-track.wave-error::after {
-  content: "NO SE PUDO CARGAR LA FORMA DE ONDA";
-  position: absolute;
-  top: 26px;
-  left: 12px;
-  z-index: 2;
-  color: var(--red);
-  font-size: 9px;
-  letter-spacing: .5px;
-  pointer-events: none;
-}
-
-.arrangement-playhead {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 5;
-  width: 0;
-  pointer-events: none;
-}
-
-.playhead-cap {
-  position: absolute;
-  top: 0;
-  left: -5px;
-  width: 10px;
-  height: 11px;
-  background: var(--red);
-  clip-path: polygon(0 0, 100% 0, 100% 65%, 50% 100%, 0 65%);
-}
-
-.playhead-line {
-  position: absolute;
-  top: 10px;
-  bottom: 0;
-  left: -1px;
-  width: 2px;
-  background: var(--red);
-  box-shadow: 0 0 7px rgba(250, 93, 103, .5);
-}
-
-.arrangement-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 10px;
-}
-
-#arrangementTrackCount {
-  color: var(--green);
-  font-weight: 800;
-}
-
-/* Canales vacíos del mezclador */
-
-.disabled-channel {
-  opacity: .4;
-}
-
-.disabled-channel .fader {
-  cursor: not-allowed;
-}
-
-/* Estado visual de los controles */
-
-.channel-buttons button.active-mute {
-  border-color: var(--red);
-  background: rgba(250, 93, 103, .15);
-  color: var(--red);
-}
-
-.channel-buttons button.active-solo {
-  border-color: var(--amber);
-  background: rgba(244, 182, 75, .15);
-  color: var(--amber);
-}
-
-.channel.muted-channel {
-  opacity: .58;
-}
-
-.channel.muted-channel .channel-name {
-  color: var(--muted);
-}
-
-/* Responsive */
-
-@media (max-width: 760px) {
-  .arrangement-viewport {
-    grid-template-columns: 125px minmax(0, 1fr);
-  }
-
-  .arrangement-track-label {
-    padding: 0 8px;
-  }
-
-  .arrangement-legend {
-    gap: 10px;
-  }
-
-  .arrangement-legend span:last-child {
-    flex-basis: 100%;
-  }
-
-  .arrangement-tools > span:first-child {
-    flex-basis: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .arrangement-viewport {
-    grid-template-columns: 100px minmax(0, 1fr);
-  }
-
-  .arrangement-footer {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .arrangement-tools {
-    gap: 5px;
-  }
-
-  .arrangement-tools button {
-    padding: 0 7px;
-  }
-}
-
-/* ==========================================
-   PPEKADORR · FULL WIDTH INTERFACE
-========================================== */
-
-html {
-  width: 100%;
-  min-width: 0;
-}
-
-body {
-  width: 100%;
-  max-width: none;
-  min-width: 0;
-  margin: 0;
-}
-
-main {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 18px 22px;
-  box-sizing: border-box;
-}
-
-.topbar {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.panel,
-.sessionbar,
-.bottom-grid,
-.help-strip,
-.editor,
-.arrangement {
-  min-width: 0;
-  max-width: none;
-  box-sizing: border-box;
-}
-
-.bottom-grid {
-  width: 100%;
-}
-
-/* ==========================================
-   MIXER · TODOS LOS FADERS VISIBLES
-========================================== */
-
-.channels {
-  display: grid !important;
-  grid-template-columns: repeat(8, minmax(105px, 1fr));
-  gap: 10px;
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  padding: 12px;
-  align-items: stretch;
-}
-
-/* Cada canal conserva su diseño */
-
-.channel {
-  width: 100%;
-  min-width: 0;
-  max-width: none;
-  box-sizing: border-box;
-}
-
-/* Evita que los nombres largos rompan la cuadrícula */
-
-.channel-name,
-.channel-header,
-.channel-label {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-/* Controles del canal */
-
-.channel-buttons {
-  flex-wrap: wrap;
-}
-
-/* Ya no necesitamos desplazarnos por bancos */
-
-.bankbar {
-  display: none !important;
-}
-
-/* ==========================================
-   RESPONSIVE · MÁS CANALES POR FILA
-========================================== */
-
-@media (min-width: 1600px) {
-  .channels {
-    grid-template-columns: repeat(10, minmax(105px, 1fr));
-  }
-}
-
-@media (max-width: 1200px) {
-  main {
-    padding: 14px;
-  }
-
-  .channels {
-    grid-template-columns: repeat(6, minmax(100px, 1fr));
-    gap: 8px;
-  }
-}
-
-@media (max-width: 850px) {
-  .channels {
-    grid-template-columns: repeat(4, minmax(95px, 1fr));
-  }
-}
-
-@media (max-width: 520px) {
-  main {
-    padding: 8px;
-  }
-
-  .channels {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-    padding: 7px;
   }
 }
