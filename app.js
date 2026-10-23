@@ -1,6 +1,20 @@
+/* PPEKADORR MULTITRACK STUDIO — PLAYER + MIXER */
 (() => {
+  "use strict";
+
   const songs = window.MULTITRACK_SONGS || [];
-  const $ = id => document.getElementById(id);
+  const $ = (id) => document.getElementById(id);
+
+  const colors = [
+    "#f4b64b",
+    "#67b9f4",
+    "#b68aff",
+    "#ff8d78",
+    "#a5e65a",
+    "#65d6c4",
+    "#ed8fbb",
+    "#aab2bd"
+  ];
 
   let selectedSong = null;
   let tracks = [];
@@ -13,37 +27,48 @@
   let soloIndex = null;
   let raf = null;
 
-  const colors = [
-    "#f4b64b", "#67b9f4", "#b68aff", "#ff8d78",
-    "#a5e65a", "#65d6c4", "#ed8fbb", "#aab2bd"
-  ];
+  // Formato de tiempo: 00:00.000
+  const fmt = (seconds) => {
+    seconds = Math.max(
+      0,
+      Number.isFinite(seconds) ? seconds : 0
+    );
 
-  const fmt = s => {
-    s = Math.max(0, Number.isFinite(s) ? s : 0);
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    const ms = Math.floor((s % 1) * 1000);
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    const ms = Math.floor((seconds % 1) * 1000);
 
-    return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}.${String(ms).padStart(3, "0")}`;
+    return (
+      `${String(minutes).padStart(2, "0")}:` +
+      `${String(secs).padStart(2, "0")}.` +
+      `${String(ms).padStart(3, "0")}`
+    );
   };
 
-  const shortFmt = s => fmt(s).slice(0, 5);
+  const shortFmt = (seconds) => fmt(seconds).slice(0, 5);
 
   function stopTicker() {
-    if (raf) cancelAnimationFrame(raf);
+    if (raf !== null) {
+      cancelAnimationFrame(raf);
+    }
+
     raf = null;
   }
 
+  // Calcular la duración de la sesión.
   function updateDuration() {
-    const ds = tracks
-      .map(t => t.audio.duration)
+    const lengths = tracks
+      .map((track) => track.audio.duration)
       .filter(Number.isFinite);
 
-    duration = ds.length ? Math.max(...ds) : 0;
+    duration = lengths.length
+      ? Math.max(...lengths)
+      : 0;
 
-    const durationEl = $("duration");
-    if (durationEl) {
-      durationEl.textContent = "DUR " + shortFmt(duration);
+    const element = $("duration");
+
+    if (element) {
+      element.textContent = `DUR ${shortFmt(duration)}`;
     }
   }
 
@@ -53,17 +78,42 @@
 
     audio.preload = "auto";
     audio.src = meta.file;
-    audio.volume = 0;
 
-    audio.addEventListener("loadedmetadata", updateDuration);
+    // El volumen lo controlan los nodos de Web Audio.
+    audio.volume = 1;
+
+    audio.addEventListener(
+      "loadedmetadata",
+      updateDuration
+    );
 
     audio.addEventListener("error", () => {
-      const n = document.querySelector(
+      const label = document.querySelector(
         `[data-track="${index}"] .channel-file`
       );
 
-      if (n) n.textContent = "AUDIO FILE NOT FOUND";
+      if (label) {
+        label.textContent = "AUDIO FILE NOT FOUND";
+      }
     });
+
+    // Registrar la pista en el ecualizador.
+    if (window.PekadorEQ) {
+      try {
+        window.PekadorEQ.registerTrackEQ(index, audio);
+
+        window.PekadorEQ.setTrackVolume(
+          index,
+          0.8
+        );
+      } catch (error) {
+        console.error(
+          "No se pudo conectar el ecualizador de la pista",
+          index,
+          error
+        );
+      }
+    }
 
     return {
       meta,
@@ -74,115 +124,142 @@
     };
   }
 
-  // Registrar las pistas en el selector de canciones.
+  // Llenar el selector de canciones.
   function populateSelect() {
-    const sel = $("songSelect");
-    if (!sel) return;
+    const select = $("songSelect");
 
-    sel.innerHTML = "";
+    if (!select) return;
+
+    select.innerHTML = "";
 
     if (!songs.length) {
-      sel.innerHTML =
+      select.innerHTML =
         '<option value="">No hay canciones configuradas</option>';
       return;
     }
 
-    songs.forEach(song => {
+    songs.forEach((song) => {
       const option = document.createElement("option");
 
       option.value = song.id;
       option.textContent = song.title;
 
-      sel.appendChild(option);
+      select.appendChild(option);
     });
 
-    sel.addEventListener("change", () => {
-      const song = songs.find(s => s.id === sel.value);
-      if (song) loadSong(song);
+    select.addEventListener("change", () => {
+      const song = songs.find(
+        (item) => item.id === select.value
+      );
+
+      if (song) {
+        loadSong(song);
+      }
     });
   }
 
-  // Lista de canciones.
+  // Lista de sesiones.
   function renderList() {
-    const songCount = $("songCount");
-    const songList = $("songList");
+    const count = $("songCount");
+    const list = $("songList");
 
-    if (!songCount || !songList) return;
+    if (count) {
+      count.textContent =
+        `${songs.length} ` +
+        `${songs.length === 1 ? "SESSION" : "SESSIONS"}`;
+    }
 
-    songCount.textContent =
-      `${songs.length} ${songs.length === 1 ? "SESSION" : "SESSIONS"}`;
+    if (!list) return;
 
-    songList.innerHTML = "";
+    list.innerHTML = "";
 
     if (!songs.length) {
-      songList.innerHTML =
+      list.innerHTML =
         '<div class="empty">Agrega sesiones en songs.js.</div>';
       return;
     }
 
-    songs.forEach((song, i) => {
+    songs.forEach((song, index) => {
       const row = document.createElement("div");
 
       row.className =
         "song-row" +
-        (selectedSong && song.id === selectedSong.id ? " selected" : "");
+        (
+          selectedSong && song.id === selectedSong.id
+            ? " selected"
+            : ""
+        );
 
       row.innerHTML = `
-        <div class="song-index">${String(i + 1).padStart(2, "0")}</div>
+        <div class="song-index">
+          ${String(index + 1).padStart(2, "0")}
+        </div>
+
         <div>
           <div class="song-name"></div>
           <div class="song-detail"></div>
         </div>
-        <div class="song-bpm">${Number(song.bpm) || "—"} BPM</div>
-        <div class="track-count">${song.tracks.length} TRACKS</div>
+
+        <div class="song-bpm">
+          ${Number(song.bpm) || "—"} BPM
+        </div>
+
+        <div class="track-count">
+          ${song.tracks.length} TRACKS
+        </div>
       `;
 
-      row.querySelector(".song-name").textContent = song.title;
+      row.querySelector(".song-name").textContent =
+        song.title;
+
       row.querySelector(".song-detail").textContent =
         song.artist || "Unknown Artist";
 
-      row.addEventListener("click", () => loadSong(song));
+      row.addEventListener("click", () => {
+        loadSong(song);
+      });
 
-      songList.appendChild(row);
+      list.appendChild(row);
     });
   }
 
-  // Cambiar de canción.
+  // Cargar una canción y liberar la sesión anterior.
   function loadSong(song) {
     stopAll();
 
-    // Desconectar o limpiar el procesamiento de las pistas anteriores.
-    if (window.PekadorEQ &&
-        typeof window.PekadorEQ.unregisterTrackEQ === "function") {
-      tracks.forEach(track => {
-        window.PekadorEQ.unregisterTrackEQ(track.index);
-      });
-    }
-
-    tracks.forEach(track => {
+    tracks.forEach((track) => {
       track.audio.pause();
-      track.audio.src = "";
+
+      if (window.PekadorEQ) {
+        window.PekadorEQ.unregisterTrackEQ(
+          track.index
+        );
+      }
+
+      track.audio.removeAttribute("src");
+      track.audio.load();
     });
 
     selectedSong = song;
     bank = 0;
     soloIndex = null;
 
-    // Restablecer EQ al cambiar de canción.
-    if (window.PekadorEQ &&
-        typeof window.PekadorEQ.resetAllEQ === "function") {
-      window.PekadorEQ.resetAllEQ();
+    tracks = song.tracks.map(
+      (meta, index) => makeTrack(meta, index)
+    );
+
+    if ($("songSelect")) {
+      $("songSelect").value = song.id;
     }
 
-    tracks = song.tracks.map((meta, index) => makeTrack(meta, index));
-
-    if ($("songSelect")) $("songSelect").value = song.id;
-
-    if ($("songTitle")) $("songTitle").textContent = song.title;
+    if ($("songTitle")) {
+      $("songTitle").textContent = song.title;
+    }
 
     if ($("songMeta")) {
       $("songMeta").textContent =
-        `${song.artist || "Unknown Artist"} · ${song.tracks.length} tracks`;
+        `${song.artist || "Unknown Artist"} · ` +
+        `${song.tracks.length} tracks`;
     }
 
     if ($("bpmValue")) {
@@ -191,14 +268,15 @@
     }
 
     if ($("loadedTracks")) {
-      $("loadedTracks").textContent = `${tracks.length} TRACKS`;
+      $("loadedTracks").textContent =
+        `${tracks.length} TRACKS`;
     }
-
-    duration = 0;
 
     if ($("currentTime")) {
       $("currentTime").textContent = "00:00.000";
     }
+
+    duration = 0;
 
     if ($("duration")) {
       $("duration").textContent = "DUR 00:00";
@@ -213,6 +291,7 @@
   // Dibujar los ocho canales visibles.
   function renderChannels() {
     const host = $("channels");
+
     if (!host) return;
 
     host.innerHTML = "";
@@ -221,27 +300,33 @@
     const visible = tracks.slice(start, start + 8);
 
     if ($("bankLabel")) {
-      $("bankLabel").textContent =
-        `BANK ${bank + 1} · CH ${start + 1}–${Math.min(start + 8, tracks.length)}`;
+      $("bankLabel").textContent = tracks.length
+        ? `BANK ${bank + 1} · CH ${start + 1}–${Math.min(start + 8, tracks.length)}`
+        : "BANK 1 · CH 1–8";
     }
 
     for (let slot = 0; slot < 8; slot++) {
       const track = visible[slot];
-      const idx = start + slot;
+      const index = start + slot;
 
       // Canal vacío.
       if (!track) {
         const channel = document.createElement("div");
 
-        channel.className = "channel disabled-channel";
+        channel.className =
+          "channel disabled-channel";
 
         channel.innerHTML = `
           <div class="channel-top">
-            <span class="channel-num">${String(idx + 1).padStart(2, "0")}</span>
+            <span class="channel-num">
+              ${String(index + 1).padStart(2, "0")}
+            </span>
             <span class="channel-name">EMPTY</span>
           </div>
 
-          <div class="channel-file">No track assigned</div>
+          <div class="channel-file">
+            No track assigned
+          </div>
 
           <div class="meter-label">
             <span>LEVEL</span>
@@ -260,16 +345,22 @@
               <span>-∞</span>
             </div>
 
-            <input class="fader" type="range"
-              min="0" max="100" value="0" disabled>
+            <input
+              class="fader"
+              type="range"
+              min="0"
+              max="100"
+              value="0"
+              disabled
+            >
           </div>
 
           <div class="db-value">−∞ dB</div>
 
           <div class="channel-buttons">
-            <button disabled>EQ</button>
             <button disabled>MUTE</button>
             <button disabled>SOLO</button>
+            <button disabled>EQ</button>
           </div>
         `;
 
@@ -277,16 +368,26 @@
         continue;
       }
 
-      const color = track.meta.color || colors[idx % colors.length];
+      // Canal con pista.
+      const color =
+        track.meta.color ||
+        colors[index % colors.length];
+
       const channel = document.createElement("div");
 
       channel.className = "channel";
-      channel.dataset.track = idx;
-      channel.style.setProperty("--channel", color);
+      channel.dataset.track = index;
+
+      channel.style.setProperty(
+        "--channel",
+        color
+      );
 
       channel.innerHTML = `
         <div class="channel-top">
-          <span class="channel-num">${String(idx + 1).padStart(2, "0")}</span>
+          <span class="channel-num">
+            ${String(index + 1).padStart(2, "0")}
+          </span>
           <span class="channel-name"></span>
         </div>
 
@@ -309,91 +410,94 @@
             <span>-∞</span>
           </div>
 
-          <input class="fader"
+          <input
+            class="fader"
             type="range"
             min="0"
             max="100"
             value="${Math.round(track.volume * 100)}"
-            aria-label="Volumen de canal">
+            aria-label="Volumen de canal"
+          >
         </div>
 
         <div class="db-value"></div>
 
         <div class="channel-buttons">
-          <button class="eq-btn" type="button"
-            data-eq-track="${idx}">EQ</button>
-
-          <button class="mute-btn" type="button">MUTE</button>
-
-          <button class="solo-btn" type="button">SOLO</button>
+          <button class="mute-btn">MUTE</button>
+          <button class="solo-btn">SOLO</button>
+          <button
+            class="eq-btn"
+            data-eq-track="${index}"
+            data-track-name=""
+          >EQ</button>
         </div>
       `;
 
       channel.querySelector(".channel-name").textContent =
-        track.meta.name || `TRACK ${idx + 1}`;
+        track.meta.name || `TRACK ${index + 1}`;
 
       channel.querySelector(".channel-file").textContent =
-        track.meta.file.split("/").pop();
+        String(track.meta.file || "").split("/").pop();
+
+      const eqButton = channel.querySelector(".eq-btn");
+
+      eqButton.dataset.trackName =
+        track.meta.name || `TRACK ${index + 1}`;
 
       // Fader de volumen.
-      channel.querySelector(".fader").addEventListener("input", event => {
-        track.volume = Number(event.target.value) / 100;
-        updateVolumes();
-      });
+      channel.querySelector(".fader").addEventListener(
+        "input",
+        (event) => {
+          track.volume =
+            Number(event.target.value) / 100;
 
-      // Botón EQ.
-      channel.querySelector(".eq-btn").addEventListener("click", () => {
-        if (!window.PekadorEQ ||
-            typeof window.PekadorEQ.openEQ !== "function") {
-          alert(
-            "No se ha cargado correctamente eq.js. " +
-            "Revisa que esté incluido en index.html."
-          );
-          return;
+          updateVolumes();
         }
+      );
 
-        window.PekadorEQ.openEQ(
-          track.index,
-          track.meta.name || `TRACK ${idx + 1}`
-        );
-      });
+      // MUTE.
+      channel.querySelector(".mute-btn").addEventListener(
+        "click",
+        () => {
+          track.muted = !track.muted;
 
-      // Botón MUTE.
-      channel.querySelector(".mute-btn").addEventListener("click", () => {
-        track.muted = !track.muted;
+          channel
+            .querySelector(".mute-btn")
+            .classList.toggle(
+              "active-mute",
+              track.muted
+            );
 
-        channel.querySelector(".mute-btn")
-          .classList.toggle("active-mute", track.muted);
+          updateVolumes();
+        }
+      );
 
-        updateVolumes();
-      });
+      // SOLO.
+      channel.querySelector(".solo-btn").addEventListener(
+        "click",
+        () => {
+          soloIndex =
+            soloIndex === index ? null : index;
 
-      // Botón SOLO.
-      channel.querySelector(".solo-btn").addEventListener("click", () => {
-        soloIndex = soloIndex === track.index ? null : track.index;
-
-        renderChannels();
-        updateVolumes();
-      });
+          renderChannels();
+          updateVolumes();
+        }
+      );
 
       host.appendChild(channel);
 
       setDb(channel, track.volume);
 
       if (track.muted) {
-        channel.querySelector(".mute-btn")
+        channel
+          .querySelector(".mute-btn")
           .classList.add("active-mute");
       }
 
-      if (soloIndex === track.index) {
-        channel.querySelector(".solo-btn")
+      if (soloIndex === index) {
+        channel
+          .querySelector(".solo-btn")
           .classList.add("active-solo");
-      }
-
-      // Registrar el audio en el sistema EQ.
-      if (window.PekadorEQ &&
-          typeof window.PekadorEQ.registerTrackEQ === "function") {
-        window.PekadorEQ.registerTrackEQ(track.index, track.audio);
       }
     }
 
@@ -402,46 +506,73 @@
     }
 
     if ($("nextBank")) {
-      $("nextBank").disabled = (bank + 1) * 8 >= tracks.length;
+      $("nextBank").disabled =
+        (bank + 1) * 8 >= tracks.length;
     }
   }
 
-  // Mostrar volumen en dB.
+  // Mostrar el volumen en decibelios.
   function setDb(channel, volume) {
-    const el = channel.querySelector(".db-value");
-    if (!el) return;
+    const label = channel.querySelector(".db-value");
 
-    el.textContent = volume === 0
+    if (!label) return;
+
+    label.textContent = volume === 0
       ? "−∞ dB"
       : `${(20 * Math.log10(volume)).toFixed(1)} dB`;
   }
 
-  // Aplicar volumen, MUTE y SOLO.
+  // Aplicar MUTE, SOLO, faders y volumen maestro.
   function updateVolumes() {
-    tracks.forEach((track, i) => {
+    tracks.forEach((track, index) => {
       const active =
         !track.muted &&
-        (soloIndex === null || soloIndex === i);
+        (soloIndex === null || soloIndex === index);
 
-      track.audio.volume = active
-        ? Math.min(1, track.volume * masterVolume)
-        : 0;
+      if (window.PekadorEQ) {
+        window.PekadorEQ.setTrackActive(
+          index,
+          active
+        );
 
-      const channel = document.querySelector(`[data-track="${i}"]`);
+        window.PekadorEQ.setTrackVolume(
+          index,
+          track.volume
+        );
+      } else {
+        track.audio.volume =
+          active
+            ? track.volume * masterVolume
+            : 0;
+      }
+
+      const channel = document.querySelector(
+        `[data-track="${index}"]`
+      );
 
       if (channel) {
         setDb(channel, track.volume);
 
-        channel.classList.toggle("disabled-channel", !active);
+        channel.classList.toggle(
+          "muted-channel",
+          !active
+        );
       }
     });
 
+    if (window.PekadorEQ) {
+      window.PekadorEQ.setMasterVolume(
+        masterVolume
+      );
+    }
+
     if ($("masterValue")) {
-      $("masterValue").textContent = `${Math.round(masterVolume * 100)}%`;
+      $("masterValue").textContent =
+        `${Math.round(masterVolume * 100)}%`;
     }
   }
 
-  // Reproducir.
+  // Reproducir todas las pistas sincronizadas.
   async function play() {
     if (!selectedSong) {
       if (songs[0]) {
@@ -456,28 +587,32 @@
     if (duration && pausedAt >= duration) {
       pausedAt = 0;
 
-      tracks.forEach(track => {
+      tracks.forEach((track) => {
         try {
           track.audio.currentTime = 0;
-        } catch (error) {}
+        } catch (_) {}
       });
     }
 
-    // Iniciar el contexto de audio, si existe.
-    if (window.PekadorEQ &&
-        typeof window.PekadorEQ.resume === "function") {
-      try {
+    try {
+      if (window.PekadorEQ) {
         await window.PekadorEQ.resume();
-      } catch (error) {
-        console.warn("No se pudo iniciar el contexto de audio:", error);
       }
+    } catch (error) {
+      console.warn(
+        "AudioContext no pudo reanudarse:",
+        error
+      );
     }
 
     playing = true;
-    startedAt = performance.now() - pausedAt * 1000;
+
+    startedAt =
+      performance.now() - pausedAt * 1000;
 
     if ($("playBtn")) {
-      $("playBtn").innerHTML = '<span class="pause-icon"></span>';
+      $("playBtn").innerHTML =
+        '<span class="pause-icon"></span>';
     }
 
     if ($("playState")) {
@@ -487,14 +622,20 @@
     updateVolumes();
 
     const results = await Promise.allSettled(
-      tracks.map(track => track.audio.play())
+      tracks.map((track) => track.audio.play())
     );
 
-    if (results.every(result => result.status === "rejected")) {
+    if (
+      results.length &&
+      results.every(
+        (result) => result.status === "rejected"
+      )
+    ) {
       playing = false;
 
       if ($("playBtn")) {
-        $("playBtn").innerHTML = '<span class="play-icon"></span>';
+        $("playBtn").innerHTML =
+          '<span class="play-icon"></span>';
       }
 
       if ($("playState")) {
@@ -511,15 +652,22 @@
   function pause() {
     if (!playing) return;
 
-    pausedAt = Math.max(0, (performance.now() - startedAt) / 1000);
+    pausedAt = Math.max(
+      0,
+      (performance.now() - startedAt) / 1000
+    );
 
-    tracks.forEach(track => track.audio.pause());
+    tracks.forEach((track) => {
+      track.audio.pause();
+    });
 
     playing = false;
+
     stopTicker();
 
     if ($("playBtn")) {
-      $("playBtn").innerHTML = '<span class="play-icon"></span>';
+      $("playBtn").innerHTML =
+        '<span class="play-icon"></span>';
     }
 
     if ($("playState")) {
@@ -529,12 +677,12 @@
 
   // Detener y volver al inicio.
   function stopAll() {
-    tracks.forEach(track => {
+    tracks.forEach((track) => {
       track.audio.pause();
 
       try {
         track.audio.currentTime = 0;
-      } catch (error) {}
+      } catch (_) {}
     });
 
     playing = false;
@@ -544,7 +692,8 @@
     stopTicker();
 
     if ($("playBtn")) {
-      $("playBtn").innerHTML = '<span class="play-icon"></span>';
+      $("playBtn").innerHTML =
+        '<span class="play-icon"></span>';
     }
 
     if ($("playState")) {
@@ -554,9 +703,23 @@
     if ($("currentTime")) {
       $("currentTime").textContent = "00:00.000";
     }
+
+    document.querySelectorAll(".meter-fill").forEach(
+      (meter) => {
+        meter.style.width = "0%";
+      }
+    );
+
+    if ($("masterMeterL")) {
+      $("masterMeterL").style.width = "0%";
+    }
+
+    if ($("masterMeterR")) {
+      $("masterMeterR").style.width = "0%";
+    }
   }
 
-  // Actualizar el contador y los medidores.
+  // Actualizar el tiempo y animar los medidores.
   function tick() {
     if (!playing) return;
 
@@ -574,34 +737,40 @@
       return;
     }
 
-    // Medidores visuales simulados.
-    tracks.forEach((track, i) => {
+    // Medidores visuales simulados, no picos reales de audio.
+    tracks.forEach((track, index) => {
       const meter = document.querySelector(
-        `[data-track="${i}"] .meter-fill`
+        `[data-track="${index}"] .meter-fill`
       );
 
       if (meter) {
         const active =
           !track.muted &&
-          (soloIndex === null || soloIndex === i);
+          (soloIndex === null || soloIndex === index);
 
         meter.style.width =
           playing && active
-            ? `${Math.max(3, Math.random() * 65 * track.volume * masterVolume)}%`
+            ? `${Math.max(
+                2,
+                Math.random() *
+                  65 *
+                  track.volume *
+                  masterVolume
+              )}%`
             : "0%";
       }
     });
 
-    const meterL = $("masterMeterL");
-    const meterR = $("masterMeterR");
+    const left = $("masterMeterL");
+    const right = $("masterMeterR");
 
-    if (meterL) {
-      meterL.style.width =
+    if (left) {
+      left.style.width =
         `${playing ? Math.random() * 75 * masterVolume : 0}%`;
     }
 
-    if (meterR) {
-      meterR.style.width =
+    if (right) {
+      right.style.width =
         `${playing ? Math.random() * 75 * masterVolume : 0}%`;
     }
 
@@ -610,34 +779,45 @@
 
   // Controles principales.
   if ($("playBtn")) {
-    $("playBtn").addEventListener("click", () => {
-      playing ? pause() : play();
-    });
+    $("playBtn").addEventListener(
+      "click",
+      () => playing ? pause() : play()
+    );
   }
 
   if ($("stopBtn")) {
-    $("stopBtn").addEventListener("click", stopAll);
+    $("stopBtn").addEventListener(
+      "click",
+      stopAll
+    );
   }
 
   if ($("restartBtn")) {
     $("restartBtn").addEventListener("click", () => {
       stopAll();
 
-      tracks.forEach(track => {
+      tracks.forEach((track) => {
         try {
           track.audio.currentTime = 0;
-        } catch (error) {}
+        } catch (_) {}
       });
     });
   }
 
+  // Volumen maestro.
   if ($("masterVolume")) {
-    $("masterVolume").addEventListener("input", event => {
-      masterVolume = Number(event.target.value) / 100;
-      updateVolumes();
-    });
+    $("masterVolume").addEventListener(
+      "input",
+      (event) => {
+        masterVolume =
+          Number(event.target.value) / 100;
+
+        updateVolumes();
+      }
+    );
   }
 
+  // Bancos del mezclador.
   if ($("prevBank")) {
     $("prevBank").addEventListener("click", () => {
       if (bank > 0) {
@@ -658,7 +838,7 @@
     });
   }
 
-  // Inicialización.
+  // Inicializar el reproductor.
   populateSelect();
   renderList();
 
