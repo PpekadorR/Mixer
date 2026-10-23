@@ -175,7 +175,20 @@
           <strong id="masterValue">85%</strong>
         </div>
 
-        <p class="master-note">El nivel master afecta el volumen de salida de todos los canales.</p>
+        <section class="master-eq" aria-labelledby="masterEqTitle">
+          <div class="master-eq-heading">
+            <div>
+              <strong id="masterEqTitle">MASTER GRAPHIC EQ</strong>
+              <span>8 BANDAS · ±12 dB</span>
+            </div>
+            <button id="master-eq-reset" type="button">RESET</button>
+            <button id="master-eq-bypass" type="button" aria-pressed="false">BYPASS</button>
+          </div>
+          <div class="master-eq-scale"><span>+12 dB</span><span>0 dB</span><span>−12 dB</span></div>
+          <div id="master-eq-bands" class="eq-bands master-eq-bands"></div>
+        </section>
+
+        <p class="master-note">El nivel y el EQ master afectan la mezcla completa, antes de la salida estéreo.</p>
       </section>
     </section>
 
