@@ -67,7 +67,9 @@
     });
 
     const channelGain = ctx.createGain();
-    channelGain.gain.value = 0.8;
+
+    // Volumen inicial normal.
+    channelGain.gain.value = 1;
 
     // Conexión: audio -> 8 bandas EQ -> volumen del canal -> volumen maestro.
     source.connect(filters[0]);
@@ -90,7 +92,7 @@
       channelGain,
       enabled: true,
       gains: Array(FREQUENCIES.length).fill(0),
-      volume: 0.8,
+      volume: 1,
       active: true
     };
 
@@ -180,13 +182,19 @@
   }
 
   // Control de volumen individual del canal.
+  // Permite amplificar hasta 4 veces (400%).
   function setTrackVolume(trackId, value) {
     const track = tracks.get(trackId);
     if (!track) return;
 
+    const numericValue = Number(value);
+
     const volume = Math.max(
       0,
-      Math.min(1, Number(value) || 0)
+      Math.min(
+        4,
+        Number.isFinite(numericValue) ? numericValue : 0
+      )
     );
 
     track.volume = volume;
