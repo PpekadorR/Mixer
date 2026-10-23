@@ -1429,3 +1429,52 @@ footer span {
     gap: 4px;
   }
 }
+
+
+/* CORRECCIÓN: mantener la regla de tiempo en su columna */
+.arrangement-viewport {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.arrangement-labels {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.arrangement-scroll {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  overflow: auto;
+}
+
+.arrangement-content {
+  position: relative;
+  min-width: 100%;
+}
+
+.timeline-ruler {
+  position: relative;
+  grid-row: 1;
+  min-height: 22px;
+}
+
+.arrangement-tracks {
+  position: relative;
+}
+
+.arrangement-label-heading {
+  min-height: 22px;
+}
+
+/* Evitar que las etiquetas de tiempo aparezcan en la columna PISTA */
+.arrangement-labels .timeline-ruler,
+.arrangement-labels .time-label,
+.arrangement-labels .ruler-label {
+  display: none;
+}
