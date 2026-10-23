@@ -102,10 +102,7 @@
       try {
         window.PekadorEQ.registerTrackEQ(index, audio);
 
-        window.PekadorEQ.setTrackVolume(
-          index,
-          0.8
-        );
+        window.PekadorEQ.setTrackVolume(index, 1);
       } catch (error) {
         console.error(
           "No se pudo conectar el ecualizador de la pista",
@@ -118,7 +115,7 @@
     return {
       meta,
       audio,
-      volume: 0.8,
+      volume: 1,
       muted: false,
       index
     };
@@ -404,9 +401,9 @@
 
         <div class="fader-zone">
           <div class="scale">
+            <span>+12</span>
             <span>+6</span>
             <span>0</span>
-            <span>-12</span>
             <span>-∞</span>
           </div>
 
@@ -414,7 +411,7 @@
             class="fader"
             type="range"
             min="0"
-            max="100"
+            max="400"
             value="${Math.round(track.volume * 100)}"
             aria-label="Volumen de canal"
           >
@@ -542,7 +539,7 @@
       } else {
         track.audio.volume =
           active
-            ? track.volume * masterVolume
+            ? Math.min(1, track.volume * masterVolume)
             : 0;
       }
 
