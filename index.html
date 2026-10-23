@@ -7,6 +7,35 @@
 <title>PpekadorR | Multitrack Console</title>
 <link rel="stylesheet" href="style.css">
 </head>
+
+<div id="eq-modal" class="eq-modal" hidden>
+  <div class="eq-window">
+    <header class="eq-header">
+      <div>
+        <h2>PPEKADORR · GRAPHIC EQ</h2>
+        <span id="eq-track-name">TRACK EQ</span>
+      </div>
+      <button id="eq-close" aria-label="Cerrar EQ">✕</button>
+    </header>
+
+    <div class="eq-scale">
+      <span>+12 dB</span>
+      <span>0 dB</span>
+      <span>−12 dB</span>
+    </div>
+
+    <div id="eq-bands" class="eq-bands"></div>
+
+    <footer class="eq-footer">
+      <button id="eq-reset">↺ RESET · FLAT</button>
+      <button id="eq-bypass">BYPASS</button>
+    </footer>
+  </div>
+</div>
+
+<script src="eq.js"></script>
+
+  
 <body>
 <header class="topbar">
   <div class="brand"><div class="brand-icon">P</div><div><h1>PPEKADOR<span>R</span> <small>MULTITRACK CONSOLE</small></h1><p>SESSION PLAYER · MIXER VIEW</p></div></div>
