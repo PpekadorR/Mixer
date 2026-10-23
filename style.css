@@ -1561,3 +1561,95 @@ footer span {
     padding: 5px 6px;
   }
 }
+
+
+/* MASTER GRAPHIC EQ: visible, siempre disponible en la sección de salida */
+.master-eq {
+  margin: 4px 12px 12px;
+  padding: 10px;
+  background: #101317;
+  border: 1px solid #343b43;
+  border-radius: 6px;
+}
+
+.master-eq-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.master-eq-heading > div {
+  display: flex;
+  flex: 1 1 100%;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.master-eq-heading strong {
+  color: #e2e8ee;
+  font: 800 11px "Barlow Condensed", sans-serif;
+  letter-spacing: .8px;
+}
+
+.master-eq-heading span {
+  color: #8f9ba7;
+  font-size: 9px;
+}
+
+.master-eq-heading button {
+  padding: 4px 7px;
+  background: #2a3036;
+  border: 1px solid #48515a;
+  border-radius: 3px;
+  color: #d7dfe7;
+  font: 700 9px "Barlow Condensed", sans-serif;
+  cursor: pointer;
+}
+
+.master-eq-heading button.active {
+  color: #171a1e;
+  background: var(--amber);
+  border-color: var(--amber);
+}
+
+.master-eq-scale {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 2px 5px;
+  color: #7f8b97;
+  font-size: 8px;
+}
+
+.master-eq-bands {
+  gap: 2px;
+  padding: 9px 2px 7px;
+  border-radius: 4px;
+}
+
+.master-eq-band {
+  gap: 7px;
+}
+
+.master-eq-band .eq-value {
+  font-size: 8px;
+}
+
+.master-eq-fader {
+  height: 92px;
+  width: 20px;
+}
+
+.master-eq-band label {
+  font-size: 9px;
+}
+
+@media (max-width: 760px) {
+  .master-eq { margin: 4px 8px 10px; padding: 8px 5px; }
+  .master-eq-fader { height: 82px; width: 18px; }
+  .master-eq-band .eq-value { font-size: 7px; }
+  .master-eq-band label { font-size: 8px; }
+  .master-eq-heading > div { flex-basis: 100%; }
+}
