@@ -1,220 +1,201 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111318">
-  <title>PpekadorR | Multitrack Console</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101318">
+  <title>PpekadorR Multitrack Console</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-icon">P</div>
-      <div>
-        <h1>PPEKADOR<span>R</span> <small>MULTITRACK CONSOLE</small></h1>
-        <p>SESSION PLAYER · MIXER VIEW</p>
-      </div>
-    </div>
-
-    <div class="session-control">
-      <label for="songSelect">SESIÓN / CANCIÓN</label>
-      <select id="songSelect" aria-label="Elegir canción"></select>
-    </div>
-
-    <div class="online"><i></i> SESSION READY</div>
-  </header>
-
-  <main>
-    <section class="sessionbar">
-      <div class="session-title">
-        <span class="lamp"></span>
-        <div>
-          <p class="micro">CURRENT SESSION</p>
-          <h2 id="songTitle">Selecciona una canción</h2>
-          <p id="songMeta">Carga tus sesiones desde songs.js</p>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">P</div>
+        <div class="brand-copy">
+          <h1>PPEKADORR <span>MULTITRACK</span></h1>
+          <p>LOCAL AUDIO CONSOLE</p>
         </div>
       </div>
 
-      <div class="readout">
-        <span class="micro">TEMPO</span>
-        <strong id="bpmValue">--- <small>BPM</small></strong>
+      <div class="topbar-center">
+        <div class="status-indicator"></div>
+        <span>ENGINE READY</span>
       </div>
 
-      <div class="readout time-readout">
-        <span class="micro">MAIN COUNTER</span>
-        <strong id="currentTime">00:00.000</strong>
-        <small id="duration">DUR 00:00</small>
+      <div class="topbar-right">
+        <span class="view-tag">MULTITRACK STUDIO</span>
       </div>
+    </header>
 
-      <div class="session-actions">
-        <button id="restartBtn" title="Volver al inicio" aria-label="Volver al inicio">⟲</button>
-        <button id="stopBtn" title="Stop" aria-label="Detener">■</button>
-        <button id="playBtn" class="play" title="Play" aria-label="Reproducir">
-          <span class="play-icon"></span>
-        </button>
-      </div>
-    </section>
+    <main class="workspace">
+      <aside class="sidebar">
+        <section class="library-panel panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">LIBRERÍA</span>
+              <h2>Sesiones</h2>
+            </div>
+            <span id="songCount" class="count-badge">0 SESSIONS</span>
+          </div>
 
-    <!-- ARREGLO MULTIPISTA -->
-    <section class="panel arrangement" id="arrangement">
-      <div class="panel-head">
-        <div>
-          <span class="section-dot green"></span>
-          <span>MULTITRACK ARRANGEMENT</span>
-        </div>
+          <div id="songList" class="song-list"></div>
+        </section>
 
-        <div class="arrangement-tools">
-          <span id="arrangementStatus">ESPERANDO SESIÓN</span>
-          <button id="zoomOut" type="button" aria-label="Alejar">−</button>
-          <span id="zoomValue">100%</span>
-          <button id="zoomIn" type="button" aria-label="Acercar">+</button>
-          <button id="zoomFit" type="button">FIT</button>
-        </div>
-      </div>
-
-      <div class="arrangement-legend">
-        <span><i class="legend-wave"></i> FORMA DE ONDA</span>
-        <span><i class="legend-playhead"></i> POSICIÓN DE REPRODUCCIÓN</span>
-        <span>HAZ CLIC EN LA REGLA O EN UNA PISTA PARA BUSCAR</span>
-      </div>
-
-      <div class="arrangement-viewport" id="arrangementViewport">
-        <div class="arrangement-labels">
-          <div class="arrangement-label-heading">PISTA</div>
-          <div id="arrangementLabels"></div>
-        </div>
-
-        <div class="arrangement-scroll" id="arrangementScroll">
-          <div class="arrangement-content" id="arrangementContent">
-            <div class="timeline-ruler" id="timelineRuler"></div>
-            <div class="arrangement-tracks" id="arrangementTracks"></div>
-            <div class="arrangement-playhead" id="arrangementPlayhead">
-              <div class="playhead-cap"></div>
-              <div class="playhead-line"></div>
+        <section class="session-panel panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">PROYECTO ACTUAL</span>
+              <h2 id="songTitle">Sesión en blanco</h2>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="arrangement-footer">
-        <span id="arrangementTrackCount">0 pistas</span>
-        <span>Las formas de onda se calculan desde los archivos de audio.</span>
-      </div>
-    </section>
+          <p id="songMeta" class="session-meta">
+            Arrastra audios al arreglo o pulsa + AÑADIR AUDIOS
+          </p>
 
-    <!-- MEZCLADOR -->
-    <section class="editor panel">
-      <div class="panel-head">
-        <div>
-          <span class="section-dot"></span>
-          <span>TRACK LIST / MIXER</span>
-        </div>
+          <div class="session-stats">
+            <div class="stat-box">
+              <span class="stat-label">TEMPO</span>
+              <strong id="bpmValue">--- <small>BPM</small></strong>
+            </div>
 
-        <div class="head-right">
-          <span id="loadedTracks">0 TRACKS</span>
-          <span class="view-tag">8 CHANNEL BANK</span>
-        </div>
-      </div>
-
-      <div class="track-ruler">
-        <span>TRACK NAME</span>
-        <span>LEVEL / METER</span>
-        <span>FADER</span>
-        <span>CONTROLS</span>
-      </div>
-
-      <div id="channels" class="channels"></div>
-
-      <div class="bankbar">
-        <span id="bankLabel">BANK 1 · CH 1–8</span>
-        <div>
-          <button id="prevBank" disabled>‹ PREV BANK</button>
-          <button id="nextBank" disabled>NEXT BANK ›</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="bottom-grid">
-      <section class="panel library">
-        <div class="panel-head">
-          <div>
-            <span class="section-dot amber"></span>
-            <span>SESSION BROWSER</span>
+            <div class="stat-box">
+              <span class="stat-label">PISTAS</span>
+              <strong id="loadedTracks">0 TRACKS</strong>
+            </div>
           </div>
-          <span class="subtle" id="songCount">0 SESSIONS</span>
-        </div>
 
-        <div id="songList" class="song-list"></div>
-        <p class="library-note">Selecciona una sesión para cargar sus pistas en la consola.</p>
+          <label class="select-label" for="songSelect">
+            CARGAR SESIÓN PRECONFIGURADA
+          </label>
+          <select id="songSelect">
+            <option value="">Sesión en blanco</option>
+          </select>
+        </section>
+      </aside>
+
+      <section class="main-column">
+        <section class="transport-panel panel">
+          <div class="transport-controls">
+            <button id="restartBtn" class="transport-btn" title="Volver al inicio" aria-label="Volver al inicio">
+              <span class="restart-icon"></span>
+            </button>
+
+            <button id="playBtn" class="transport-btn play-btn" title="Reproducir" aria-label="Reproducir">
+              <span class="play-icon"></span>
+            </button>
+
+            <button id="stopBtn" class="transport-btn" title="Detener" aria-label="Detener">
+              <span class="stop-icon"></span>
+            </button>
+          </div>
+
+          <div class="time-display">
+            <span id="currentTime">00:00.000</span>
+            <span class="time-divider">/</span>
+            <span id="duration">DUR 00:00</span>
+          </div>
+
+          <div class="master-section">
+            <div class="master-label">
+              <span>MASTER</span>
+              <strong id="masterValue">85%</strong>
+            </div>
+
+            <div class="master-meter">
+              <div id="masterMeterL" class="master-meter-fill"></div>
+            </div>
+            <div class="master-meter">
+              <div id="masterMeterR" class="master-meter-fill"></div>
+            </div>
+
+            <input
+              id="masterVolume"
+              class="master-volume"
+              type="range"
+              min="0"
+              max="100"
+              value="85"
+              aria-label="Volumen master"
+            >
+          </div>
+        </section>
+
+        <section class="mixer-panel panel">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">MIXING DESK</span>
+              <h2>Mezclador</h2>
+            </div>
+
+            <div class="mixer-heading-right">
+              <span id="bankLabel" class="count-badge">0 CANALES</span>
+              <button id="prevBank" type="button" hidden>ANTERIOR</button>
+              <button id="nextBank" type="button" hidden>SIGUIENTE</button>
+            </div>
+          </div>
+
+          <div id="channels" class="channels"></div>
+        </section>
+
+        <section id="arrangement" class="arrangement-panel panel">
+          <div class="section-heading arrangement-heading">
+            <div>
+              <span class="eyebrow">TIMELINE EDITOR</span>
+              <h2>Arreglo multipista</h2>
+            </div>
+
+            <div class="arrangement-tools">
+              <span id="arrangementStatus" class="arrangement-status">
+                ESPERANDO SESIÓN
+              </span>
+              <span id="arrangementTrackCount" class="count-badge">0 pistas</span>
+            </div>
+          </div>
+
+          <div class="timeline-toolbar">
+            <div class="timeline-legend">
+              <span class="legend-dot"></span>
+              <span>FORMA DE ONDA</span>
+            </div>
+
+            <div class="zoom-controls">
+              <button id="zoomOut" type="button" aria-label="Alejar">−</button>
+              <span id="zoomValue">100%</span>
+              <button id="zoomIn" type="button" aria-label="Acercar">+</button>
+              <button id="zoomFit" type="button">AJUSTAR</button>
+            </div>
+          </div>
+
+          <div class="arrangement-viewport">
+            <div class="arrangement-label-column">
+              <div class="arrangement-label-spacer">PISTA</div>
+              <div id="arrangementLabels" class="arrangement-labels"></div>
+            </div>
+
+            <div id="arrangementScroll" class="arrangement-scroll">
+              <div id="arrangementContent" class="arrangement-content">
+                <div id="timelineRuler" class="timeline-ruler"></div>
+                <div id="arrangementTracks" class="arrangement-tracks"></div>
+                <div id="arrangementPlayhead" class="arrangement-playhead"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="arrangement-footer">
+            <span>HAZ CLIC EN LA REGLA O EN UNA FORMA DE ONDA PARA BUSCAR</span>
+            <span>IMPORTACIÓN LOCAL DE AUDIO</span>
+          </div>
+        </section>
       </section>
+    </main>
 
-      <section class="panel master">
-        <div class="panel-head">
-          <div>
-            <span class="section-dot green"></span>
-            <span>MASTER OUTPUT</span>
-          </div>
-          <span class="subtle">STEREO OUT</span>
-        </div>
-
-        <div class="master-meter">
-          <div>
-            <span>L</span>
-            <div class="meter"><i id="masterMeterL"></i></div>
-          </div>
-          <div>
-            <span>R</span>
-            <div class="meter"><i id="masterMeterR"></i></div>
-          </div>
-        </div>
-
-        <div class="master-control">
-          <label for="masterVolume">MASTER LEVEL</label>
-          <input id="masterVolume" type="range" min="0" max="100" value="85">
-          <strong id="masterValue">85%</strong>
-        </div>
-
-        <p class="master-note">El nivel master afecta el volumen de salida de todos los canales.</p>
-      </section>
-    </section>
-
-    <section class="help-strip">
-      <strong>ESTRUCTURA DE ARCHIVOS</strong>
-      <code>audio / nombre-de-cancion / drums.mp3 · bass.mp3 · voz.mp3 · ...</code>
-      <span>Los nombres y rutas se declaran en <b>songs.js</b>.</span>
-    </section>
-  </main>
-
-  <!-- ECUALIZADOR -->
-  <div id="eq-modal" class="eq-modal" role="dialog" aria-modal="true" aria-labelledby="eq-track-name" hidden>
-    <div class="eq-window">
-      <header class="eq-header">
-        <div>
-          <h2>PPEKADORR · GRAPHIC EQ</h2>
-          <span id="eq-track-name">TRACK EQ</span>
-        </div>
-        <button id="eq-close" type="button" aria-label="Cerrar EQ">✕</button>
-      </header>
-
-      <div class="eq-scale">
-        <span>+12 dB</span>
-        <span>0 dB</span>
-        <span>−12 dB</span>
-      </div>
-
-      <div id="eq-bands" class="eq-bands"></div>
-
-      <footer class="eq-footer">
-        <button id="eq-reset" type="button">↺ RESET · FLAT</button>
-        <button id="eq-bypass" type="button">BYPASS</button>
-      </footer>
-    </div>
+    <footer class="app-footer">
+      <span>PPEKADORR MULTITRACK CONSOLE</span>
+      <span>LOCAL AUDIO · MULTITRACK PLAYBACK</span>
+    </footer>
   </div>
-
-  <footer>
-    PPEKADORR MULTITRACK CONSOLE <span>•</span> STATIC WEB AUDIO · GITHUB PAGES
-  </footer>
 
   <script src="songs.js"></script>
   <script src="eq.js"></script>
