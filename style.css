@@ -1478,3 +1478,14 @@ footer span {
 .arrangement-labels .ruler-label {
   display: none;
 }
+
+
+/* Ocultar las etiquetas de tiempo que aparecen en la columna izquierda */
+#arrangementLabels .time-label,
+#arrangementLabels .ruler-label,
+#arrangementLabels .timeline-label,
+#arrangementLabels [data-time],
+.arrangement-labels .time,
+.arrangement-labels .tick-label {
+  display: none !important;
+}
