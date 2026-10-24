@@ -2656,3 +2656,53 @@ body[data-studio-density="compact"] .studio-panel .loudness-reading{min-height:6
   flex: 0 0 20px !important;
   margin: 0 !important;
 }
+
+/* FADERS CON DESLIZADOR TIPO CONSOLA */
+
+.channels input.fader,
+.group-buses input.group-fader {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 28px !important;
+  background: transparent;
+  touch-action: none;
+}
+
+/* Riel de los faders */
+.channels input.fader::-webkit-slider-runnable-track,
+.group-buses input.group-fader::-webkit-slider-runnable-track {
+  width: 5px;
+  background: #454e57;
+  border-radius: 3px;
+}
+
+/* Deslizador rectangular metálico */
+.channels input.fader::-webkit-slider-thumb,
+.group-buses input.group-fader::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 13px;
+  margin-left: -10.5px;
+  background: linear-gradient(
+    to bottom,
+    #e8edf1 0%,
+    #b4bdc6 45%,
+    #626d78 100%
+  );
+  border: 1px solid #e1e6eb;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px #0008;
+}
+
+/* Compatibilidad con Firefox */
+.channels input.fader::-moz-range-thumb,
+.group-buses input.group-fader::-moz-range-thumb {
+  width: 26px;
+  height: 13px;
+  background: linear-gradient(#e8edf1, #626d78);
+  border: 1px solid #e1e6eb;
+  border-radius: 2px;
+}
