@@ -2632,22 +2632,27 @@ body[data-studio-density="compact"] .studio-panel .loudness-reading{min-height:6
 }
 
 
-/* Acercar números al fader GROUP BUS */
-.group-fader-zone {
-  display: grid !important;
-  grid-template-columns: 26px 20px;
+/* GROUP BUS: números junto al fader */
+
+.group-buses .group-fader-zone {
+  display: flex !important;
   justify-content: center !important;
-  align-items: center;
-  column-gap: 2px !important;
+  align-items: center !important;
+  gap: 3px !important;
 }
 
-.group-fader-scale {
-  width: 26px;
-  text-align: right;
-  justify-self: end;
+/* Números 200, 100 y 0 */
+.group-buses .group-fader-scale {
+  width: 20px !important;
+  flex: 0 0 20px !important;
+  text-align: right !important;
 }
 
-.group-fader {
-  width: 20px;
-  justify-self: start;
+/* Corregir el ancho del fader */
+.group-buses input.group-fader {
+  width: 20px !important;
+  min-width: 20px !important;
+  max-width: 20px !important;
+  flex: 0 0 20px !important;
+  margin: 0 !important;
 }
