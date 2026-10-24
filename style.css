@@ -2445,3 +2445,188 @@ body[data-studio-density="compact"] .studio-panel .loudness-reading{min-height:6
   border-radius: 4px;
   pointer-events: none;
 }
+
+/* ========================================
+   PPEKADORR - VERSION MOBILE
+======================================== */
+
+@media (max-width: 980px) {
+
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  main {
+    width: 100%;
+    padding: 8px;
+  }
+
+  /* Espacio de trabajo adaptable */
+  .studio-stage {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible !important;
+  }
+
+  .studio-workspace {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* Ventanas una debajo de otra */
+  .studio-workspace > .studio-panel:not(.studio-hidden) {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Desactivar arrastre de ventanas */
+  .studio-resize,
+  .studio-panel-actions .studio-grip {
+    display: none !important;
+  }
+
+  .studio-hint {
+    display: none;
+  }
+
+  /* Barra de herramientas */
+  .studio-toolbar {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .studio-toolbar-controls {
+    width: 100%;
+    margin-left: 0;
+    gap: 6px;
+  }
+
+  .studio-setting {
+    flex: 1 1 110px;
+    min-width: 0;
+  }
+
+  .studio-setting select {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Transporte */
+  .studio-panel .session-title {
+    flex: 1 1 100%;
+    min-width: 0;
+    padding: 6px;
+  }
+
+  .studio-panel .readout {
+    flex: 1 1 100px;
+    min-width: 0;
+    padding: 6px;
+  }
+
+  .studio-panel .session-actions {
+    flex: 1 1 100%;
+    justify-content: center;
+    padding: 8px;
+  }
+
+  /* Multitrack Arrangement */
+  .studio-workspace > #arrangement.studio-panel {
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  #arrangement .arrangement-viewport {
+    height: clamp(350px, 60dvh, 600px) !important;
+    min-height: 0;
+    flex: 0 0 auto !important;
+    grid-template-columns: 85px minmax(0, 1fr);
+  }
+
+  #arrangement .arrangement-scroll {
+    overflow: auto;
+  }
+
+  .studio-panel .arrangement-tools {
+    justify-content: flex-start;
+  }
+
+  /* Mixer horizontal con scroll */
+  .studio-panel .channels,
+  .studio-panel .group-buses-strips {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 6px !important;
+    padding-bottom: 10px;
+    overscroll-behavior-x: contain;
+  }
+
+  .studio-panel .channels > .channel,
+  .studio-panel .group-buses-strips > .group-strip {
+    flex: 0 0 84px !important;
+    width: 84px !important;
+    min-width: 84px !important;
+    max-width: 84px !important;
+  }
+
+  .studio-panel .track-ruler {
+    display: none;
+  }
+
+  /* Master Loudness compacto */
+  .studio-panel .loudness-layout {
+    display: grid !important;
+    grid-template-columns: 70px minmax(0, 1fr) !important;
+    gap: 7px;
+    align-items: start;
+  }
+
+  .studio-panel .loudness-gauge {
+    width: 70px !important;
+    min-width: 0 !important;
+    flex: none !important;
+  }
+
+  .studio-panel .loudness-values {
+    display: grid !important;
+    flex: none !important;
+    min-width: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+  }
+
+  .studio-panel .loudness-reading {
+    min-height: 55px !important;
+    padding: 5px 3px !important;
+  }
+
+  .studio-panel .loudness-reading span {
+    font-size: 9px;
+    overflow-wrap: anywhere;
+  }
+
+  /* Ecualizador Master */
+  .panel.master .master-eq {
+    max-width: 100%;
+    overflow-x: auto !important;
+  }
+
+  .panel.master .master-eq-bands {
+    min-width: 350px;
+  }
+
+}
