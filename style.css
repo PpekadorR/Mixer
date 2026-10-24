@@ -2630,3 +2630,24 @@ body[data-studio-density="compact"] .studio-panel .loudness-reading{min-height:6
   }
 
 }
+
+
+/* Acercar números al fader GROUP BUS */
+.group-fader-zone {
+  display: grid !important;
+  grid-template-columns: 26px 20px;
+  justify-content: center !important;
+  align-items: center;
+  column-gap: 2px !important;
+}
+
+.group-fader-scale {
+  width: 26px;
+  text-align: right;
+  justify-self: end;
+}
+
+.group-fader {
+  width: 20px;
+  justify-self: start;
+}
