@@ -1,0 +1,470 @@
+/* ======================================================================
+   PPEKADORR / REFERENCE STUDIO V4
+   The application, not a screenshot: a restrained professional DAW layout.
+   The panels and controls below are the existing, wired HTML elements.
+   ====================================================================== */
+:root{
+  --ref-bg:#121a22;--ref-shell:#1b252e;--ref-face:#27323c;--ref-raised:#32404c;
+  --ref-border:#405361;--ref-subtle:#35434f;--ref-ink:#dee6ee;--ref-dim:#a4b4c2;
+  --ref-amber:#edaa51;--ref-green:#5bec87;--ref-teal:#40c5cc;--ref-blue:#4397ed;
+  --ref-browser:238px;--ref-arrangement:440px;--ref-mixer:310px;
+}
+html{background:var(--ref-bg)!important;color-scheme:dark}
+body.ref-studio,body.ref-studio[data-studio-theme],body.ref-studio[data-studio-theme="graphite"]{
+  background:var(--ref-bg)!important;color:var(--ref-ink)!important;
+  font:12px/1.3 Arial,"Segoe UI",sans-serif!important;
+  overflow-x:hidden!important;min-width:0; padding:0!important;
+}
+body.ref-studio *{box-sizing:border-box}
+body.ref-studio button,body.ref-studio select,body.ref-studio input{font-family:Arial,"Segoe UI",sans-serif!important}
+body.ref-studio button{cursor:pointer}
+body.ref-studio button:disabled{opacity:.38;cursor:default}
+body.ref-studio button:focus-visible,body.ref-studio select:focus-visible,body.ref-studio input:focus-visible,body.ref-studio [contenteditable]:focus-visible{outline:2px solid #8fd6ff!important;outline-offset:-1px}
+/* Global application's top native-style menu strip */
+body.ref-studio .topbar{
+  position:sticky!important;top:0!important;z-index:190!important;
+  width:100%!important;height:36px!important;min-height:36px!important;
+  display:flex!important;align-items:center!important;gap:16px!important;
+  margin:0!important;padding:0 12px!important;
+  border:0!important;border-bottom:1px solid #3d4955!important;
+  border-radius:0!important;background:#1b252f!important;box-shadow:inset 0 1px #4e5b6729!important;
+}
+body.ref-studio .brand{display:flex!important;align-items:center;gap:9px!important;min-width:0;max-width:274px;flex-shrink:0}
+body.ref-studio .brand-icon{display:grid!important;place-items:center!important;width:19px!important;height:19px!important;min-width:19px!important;color:#75bce9!important;border:1px solid #295579!important;background:#17354c!important;border-radius:3px!important;font:italic 800 14px Arial,sans-serif!important;box-shadow:none!important}
+body.ref-studio .brand h1{font:500 15px Arial,sans-serif!important;letter-spacing:0!important;text-transform:none!important;white-space:nowrap!important;color:#e5ebf2!important}
+body.ref-studio .brand h1 span{color:#e5ebf2!important}
+body.ref-studio .brand h1 small{display:none!important}
+body.ref-studio .brand p{display:none!important}
+body.ref-studio .pro-menubar{display:flex;gap:0;align-items:center;flex-shrink:0}
+body.ref-studio .pro-menu{position:relative}
+body.ref-studio .pro-menu summary{display:block;list-style:none;cursor:pointer;padding:9px 11px;height:35px;line-height:16px;color:#c1cdd7;font:400 12px Arial,sans-serif;border:0;border-radius:0}
+body.ref-studio .pro-menu summary::-webkit-details-marker{display:none}
+body.ref-studio .pro-menu summary:hover,body.ref-studio .pro-menu[open] summary{background:#364652;color:white}
+body.ref-studio .pro-dropdown{position:absolute;z-index:999;top:34px;left:0;width:208px;padding:4px;background:#24333f;border:1px solid #586a78;box-shadow:0 10px 26px #000b;border-radius:2px}
+body.ref-studio .pro-dropdown button{display:block;width:100%;padding:8px 9px;text-align:left;color:#d9e4eb;background:transparent;border:0;border-radius:1px;font-size:11px}
+body.ref-studio .pro-dropdown button:hover{background:#3a596b;color:#fff}
+body.ref-studio .session-control{margin-left:auto!important;display:flex!important;gap:5px!important;min-width:180px;max-width:300px}
+body.ref-studio .session-control label{display:none!important}
+body.ref-studio .session-control select{height:26px!important;min-width:175px!important;max-width:290px!important;background:#111b24!important;border:1px solid #475968!important;border-radius:2px!important;color:#f0f2f6;font-size:11px!important;padding:0 23px 0 8px!important}
+body.ref-studio .online{margin-left:2px!important;color:#88a5b4!important;font:9px Arial,sans-serif!important;white-space:nowrap}
+body.ref-studio .online i{background:#69d89b!important}
+/* True transport, directly under menu, styled in hardware-inspired segments. */
+body.ref-studio #transportDock.transport-fixed{
+  position:sticky!important;top:36px!important;bottom:auto!important;z-index:185!important;
+  margin:0!important;width:100%!important;min-height:69px!important;height:69px!important;max-height:69px!important;
+  padding:6px 12px!important;display:flex!important;align-items:stretch!important;justify-content:flex-start!important;
+  gap:7px!important;border:0!important;border-bottom:1px solid #53616c!important;border-radius:0!important;
+  background:linear-gradient(#303e49,#27323d)!important;box-shadow:inset 0 1px #ffffff10!important;
+}
+body.ref-studio #transportDock.transport-hidden{display:none!important}
+body.ref-studio #transportDock>.transport-close{position:absolute!important;right:3px!important;top:3px!important;width:13px!important;height:13px!important;min-height:13px!important;background:#374650!important;border:1px solid #6b7d89!important;border-radius:1px!important;color:#bdcbd6!important;line-height:8px!important;font-size:9px!important;padding:0!important}
+body.ref-studio #transportDock .session-actions{order:0!important;flex:0 0 auto!important;display:flex!important;gap:3px!important;align-items:stretch!important;padding:0 7px 0 0!important;border-right:1px solid #17222b!important}
+body.ref-studio #transportDock .session-actions button{width:43px!important;min-width:43px!important;height:55px!important;min-height:55px!important;padding:0!important;display:grid;place-items:center;background:linear-gradient(#334452,#202c36)!important;color:#e7edf4!important;border:1px solid #14212b!important;box-shadow:inset 0 1px #899aa929,0 1px #57667355!important;border-radius:3px!important;font:700 16px Arial,sans-serif!important}
+body.ref-studio #transportDock .session-actions button:hover{background:linear-gradient(#456176,#293f4e)!important}
+body.ref-studio #transportDock .session-actions #rewindBtn,body.ref-studio #transportDock .session-actions #forwardBtn{font-size:14px!important}
+body.ref-studio #transportDock .session-actions #pauseBtn{font-size:19px!important}
+body.ref-studio #transportDock .session-actions button.play{width:48px!important;background:linear-gradient(#163827,#10291b)!important;border-color:#375840!important;box-shadow:inset 0 1px #8cdd9950!important}
+body.ref-studio #transportDock .session-actions button.play .play-icon{border-left-color:#55f06d!important}
+body.ref-studio #transportDock .session-title{order:5!important;flex:0 1 155px!important;max-width:155px!important;min-width:95px!important;display:flex!important;align-items:center!important;padding:3px 5px!important;margin:0!important;overflow:hidden!important;border-left:1px solid #475663!important}
+body.ref-studio #transportDock .session-title .lamp{display:none!important}
+body.ref-studio #transportDock .session-title .micro{font:700 8px Arial,sans-serif!important;color:#9aabb8!important;letter-spacing:.6px!important;margin:0 0 4px!important}
+body.ref-studio #transportDock .session-title #songTitle{font:700 11px Arial,sans-serif!important;letter-spacing:0!important;border-bottom:1px dashed #728693!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;color:#eaf0f4!important;padding:0!important;margin:0 0 3px!important;max-width:145px}
+body.ref-studio #transportDock .session-title #songMeta{font:9px Arial,sans-serif!important;color:#9aabb9!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:145px}
+body.ref-studio #transportDock .readout{border:1px solid #18242e!important;background:#111b20!important;border-radius:3px!important;box-shadow:inset 0 1px 7px #0009!important;flex:0 0 auto!important;margin:0!important}
+body.ref-studio #transportDock .readout:not(.time-readout){order:4!important;min-width:73px!important;width:73px!important;padding:6px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important}
+body.ref-studio #transportDock .readout:not(.time-readout) .micro{font:700 9px Arial,sans-serif!important;color:#a8bbc9!important}
+body.ref-studio #transportDock #bpmValue{font:700 19px Consolas,monospace!important;color:#bce491!important;white-space:nowrap!important}
+body.ref-studio #transportDock #bpmValue small{font:700 9px Arial,sans-serif!important;color:#a7bdc5}
+body.ref-studio #transportDock .time-readout{order:1!important;min-width:194px!important;width:194px!important;padding:0!important;position:relative!important;overflow:hidden!important}
+body.ref-studio #transportDock .time-readout>.micro,body.ref-studio #transportDock .time-readout>#currentTime,body.ref-studio #transportDock .time-readout>#duration{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+.ref-timecode{height:100%;display:flex;flex-direction:column;align-items:stretch;justify-content:center;padding:4px 10px}
+.ref-counter-title{text-align:center;font:700 8px Arial,sans-serif;color:#8da1b1;letter-spacing:1.1px}
+.ref-timecode strong{font:700 27px/1.12 Consolas,"Liberation Mono",monospace;color:#f2ae53;letter-spacing:1px;text-align:center;text-shadow:0 0 8px #db86341f;white-space:nowrap}
+.ref-time-units{display:flex;justify-content:space-around;color:#7e97a8;font:7px Arial,sans-serif;letter-spacing:.5px}
+body.ref-studio #transportDock .pro-beat-counter{order:2!important;min-width:158px!important;width:158px!important;height:57px!important;padding:7px 6px!important;margin:0!important;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;border:1px solid #172530;background:#101c24;border-radius:2px;box-shadow:inset 0 1px 7px #0008}
+body.ref-studio #transportDock .pro-beat-counter>span{font:8px Arial,sans-serif;color:#8e9daa;letter-spacing:1px}
+body.ref-studio #transportDock .pro-beat-counter strong{font:700 18px Consolas,monospace;color:#71d8eb;white-space:nowrap;letter-spacing:-.3px}
+.ref-range{order:3;flex:0 0 134px;min-width:134px;height:57px;border:1px solid #18262f;border-radius:2px;background:#14212b;padding:5px 7px;display:flex;flex-direction:column;justify-content:center;gap:3px}
+.ref-range>div{display:flex;gap:5px;justify-content:space-between;align-items:center;height:13px;font:700 8px Arial,sans-serif;color:#bdc9d2}
+.ref-range output{font:700 9px Consolas,monospace;color:#65cbe7;white-space:nowrap}
+body.ref-studio #transportDock .pro-status{display:none!important}
+.ref-output-meter{order:6;margin-left:auto;flex:1 1 165px;min-width:110px;max-width:240px;padding:5px 7px;border:1px solid #17242d;border-radius:2px;background:#152129;display:flex;flex-direction:column;justify-content:center;gap:3px}
+.ref-output-label{display:flex;align-items:center;justify-content:space-between;color:#a9b7c4;font:700 8px Arial,sans-serif}
+.ref-output-label span{font:10px Consolas,monospace;color:#e2e9ef}
+.ref-output-bars{display:flex;flex-direction:column;gap:3px;height:19px;justify-content:center}
+.ref-output-bars::before,.ref-output-bars::after{content:"";width:100%;height:7px;grid-column:1;background:linear-gradient(90deg,transparent 0 9%,#4a5b622c 9% 10%,transparent 10% 19%,#4a5b622c 19% 20%,transparent 20% 29%,#4a5b622c 29% 30%,transparent 30%);position:absolute;pointer-events:none}
+.ref-output-bars{position:relative}
+.ref-output-bars i{display:block;width:0;height:7px;background:linear-gradient(to right,#3fcb71 0%,#6df380 55%,#e9d342 83%,#e98b36 97%);transition:width .09s linear;box-shadow:0 0 5px #48c77729}
+.ref-output-scale{display:flex;justify-content:space-between;color:#8093a1;font:8px Consolas,monospace}
+/* Actual editor viewport: browser / arrangement / mixer / groups / master as one desktop console */
+body.ref-studio main{display:block!important;max-width:none!important;margin:0!important;padding:0!important;min-height:0!important;width:100%!important}
+body.ref-studio .studio-toolbar{
+  position:sticky!important;top:105px!important;z-index:180!important;
+  display:flex!important;align-items:center!important;flex-wrap:nowrap!important;
+  gap:8px!important;width:100%!important;height:35px!important;min-height:35px!important;max-height:35px!important;
+  padding:3px 8px!important;margin:0!important;
+  border:0!important;border-bottom:1px solid #425565!important;
+  border-radius:0!important;background:#26323d!important;box-shadow:none!important;
+}
+body.ref-studio.transport-is-hidden .studio-toolbar{top:36px!important}
+body.ref-studio .studio-toolbar-brand{display:flex;gap:5px;align-items:center;flex:0 0 auto!important;font:700 10px Arial,sans-serif;color:#c1cfda;min-width:0!important;white-space:nowrap}
+body.ref-studio .studio-toolbar-brand strong{color:#e8edf4;font-size:11px}
+body.ref-studio .studio-toolbar-brand>span{color:#748c9b}
+body.ref-studio .studio-edit-tools{display:flex;align-items:center;gap:4px;min-width:0;flex:1;white-space:nowrap;overflow-x:auto;scrollbar-width:thin}
+body.ref-studio .clip-editor-toolbar{display:flex!important;align-items:center;gap:3px!important;white-space:nowrap;padding:0!important;margin:0!important;min-height:0!important;background:transparent!important;border:0!important;flex:none!important}
+body.ref-studio .clip-editor-toolbar>strong{display:none!important}
+body.ref-studio .clip-editor-toolbar small{display:none!important}
+body.ref-studio .clip-editor-toolbar button,body.ref-studio .studio-edit-tools>button,body.ref-studio .studio-edit-tools>span,body.ref-studio .studio-advanced-tools summary{height:25px!important;min-height:25px!important;padding:4px 9px!important;display:inline-flex;align-items:center;justify-content:center;font:700 10px Arial,sans-serif!important;color:#c1d1db!important;background:#2d3c47!important;border:1px solid #455c6b!important;border-radius:2px!important}
+body.ref-studio .clip-editor-toolbar button.active{background:#42677f!important;color:white!important;border-color:#618ba6!important}
+body.ref-studio .clip-editor-toolbar .clip-tool-current{display:inline-flex!important;align-items:center!important;gap:4px!important;height:25px!important;padding:0 5px!important;color:#e1edf4!important;font:700 8px Arial,sans-serif!important}
+body.ref-studio .clip-editor-toolbar .clip-tool-current b{font-size:14px!important}
+body.ref-studio .clip-editor-toolbar button:disabled{opacity:.4!important;cursor:not-allowed!important}
+body.ref-studio .clip-editor-toolbar .clip-selection-status{display:inline-flex!important;align-items:center!important;height:25px!important;min-width:145px!important;padding:0 5px!important;color:#91a8b8!important;font:700 8px Arial,sans-serif!important;letter-spacing:0!important}
+body.ref-studio .studio-edit-tools #zoomValue{font:700 10px Consolas,monospace!important;background:#182733!important;padding:4px 6px!important}
+body.ref-studio .studio-advanced-tools{position:relative;flex:none}
+body.ref-studio .studio-advanced-tools summary{list-style:none;cursor:pointer;color:#ded5bb!important}
+body.ref-studio .studio-advanced-tools summary::-webkit-details-marker{display:none}
+body.ref-studio .studio-advanced-tools[open]>.production-tools{display:flex!important;position:absolute;top:29px;left:0;z-index:100;width:530px;max-width:calc(100vw - 20px);flex-wrap:wrap;box-shadow:0 8px 23px #000a;padding:10px!important;background:#283846!important;border:1px solid #526979!important}
+body.ref-studio .studio-advanced-tools:not([open])>.production-tools{display:none!important}
+body.ref-studio .studio-toolbar-controls{display:flex!important;align-items:center!important;justify-content:flex-end;gap:3px!important;flex:0 0 auto!important;margin:0!important;padding:0!important;max-width:42vw;min-width:0!important}
+body.ref-studio .studio-setting{display:flex;align-items:center;gap:3px;white-space:nowrap;font:700 9px Arial,sans-serif;color:#9faeb9!important}
+body.ref-studio .studio-setting select{height:25px!important;min-height:25px!important;max-width:130px!important;padding:3px 16px 3px 6px!important;font:10px Arial,sans-serif!important;background:#1d2a34!important;color:#d9e5ec!important;border:1px solid #42596a!important;border-radius:2px!important}
+body.ref-studio #studioLock,body.ref-studio #studioReset,body.ref-studio #studioPanels{height:25px!important;min-height:25px!important;border:1px solid #456070!important;border-radius:2px!important;background:#30414f!important;color:#d0e0ea!important;padding:3px 8px!important;font:700 10px Arial,sans-serif!important;white-space:nowrap}
+body.ref-studio .studio-files{position:relative;flex:none}
+body.ref-studio .studio-files>summary{list-style:none;cursor:pointer;height:25px;padding:5px 8px;font:700 10px Arial,sans-serif;color:#e7d4b2;border:1px solid #625740;background:#3a352b;border-radius:2px;white-space:nowrap}
+body.ref-studio .studio-files>summary::-webkit-details-marker{display:none}
+body.ref-studio .studio-files .studio-actionbar{position:absolute!important;right:0!important;top:29px!important;z-index:100;background:#293744!important;border:1px solid #5b6977!important;box-shadow:0 12px 24px #000a!important;border-radius:2px!important;padding:8px!important;width:290px!important;display:flex!important;flex-wrap:wrap!important;gap:4px!important;max-height:340px;overflow:auto}
+body.ref-studio .studio-files .studio-actionbar>*{font:700 10px Arial,sans-serif!important;color:#d5e3ec!important}
+body.ref-studio .studio-files button{min-height:25px!important;background:#324350;border:1px solid #61707d;border-radius:2px;color:#dde8ed;font:700 10px Arial,sans-serif;padding:4px 7px}
+body.ref-studio .studio-visibility:not([hidden]){position:fixed;left:auto;width:280px;max-width:95vw;z-index:1000;display:flex;flex-wrap:wrap;gap:5px;padding:8px;border:1px solid #627585;box-shadow:0 10px 26px #000a;background:#263642}
+body.ref-studio .studio-visibility[hidden]{display:none!important}
+body.ref-studio .studio-panel-toggle{background:#31434f;border:1px solid #5b7080;border-radius:2px;padding:6px 9px;color:#d8e3eb;font-size:10px}
+body.ref-studio .studio-panel-toggle[aria-pressed="true"]{background:#35545b;border-color:#58888e}
+body.ref-studio .studio-stage{display:block!important;overflow-x:auto!important;overflow-y:visible!important;background:#111820!important;margin:0!important;padding:0 4px 4px!important;border:0!important;box-shadow:none!important}
+body.ref-studio .studio-workspace{
+  position:relative!important;margin:0!important;padding:0!important;
+  display:grid!important;gap:3px!important;
+  min-width:1100px!important;width:100%!important;height:auto!important;min-height:0!important;
+  grid-template-columns:var(--ref-browser) minmax(410px,1fr) 284px 154px!important;
+  grid-template-rows:var(--ref-arrangement) var(--ref-mixer) auto!important;
+  align-items:stretch!important;background:#141d26!important;
+}
+body.ref-studio .studio-workspace>.studio-panel{
+  position:relative!important;left:auto!important;top:auto!important;width:auto!important;height:auto!important;
+  max-width:none!important;min-width:0!important;min-height:0!important;
+  display:flex!important;flex-direction:column!important;
+  overflow:hidden!important;margin:0!important;padding:0!important;
+  background:#1c2730!important;border:1px solid #40515e!important;border-radius:2px!important;
+  box-shadow:inset 0 1px #8c9caa16!important;
+}
+body.ref-studio .studio-workspace>.studio-panel.studio-hidden{display:none!important}
+body.ref-studio .studio-sidebar>.studio-panel.studio-hidden{display:none!important}
+body.ref-studio .studio-sidebar{grid-column:1!important;grid-row:1/3!important;align-self:start!important;display:flex!important;flex-direction:column!important;gap:3px!important;width:100%!important;height:max-content!important;min-height:0!important;overflow:visible!important}
+body.ref-studio .studio-sidebar>.studio-panel{position:relative!important;left:auto!important;top:auto!important;display:flex!important;flex-direction:column!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;flex:none!important;overflow:hidden!important}
+body.ref-studio .studio-sidebar>.library{grid-column:auto!important;grid-row:auto!important;align-self:start!important}
+body.ref-studio .studio-workspace>#arrangement{grid-column:2/5!important;grid-row:1!important}
+body.ref-studio .studio-workspace>.editor{grid-column:2!important;grid-row:2!important}
+body.ref-studio .studio-workspace>.group-buses{grid-column:3!important;grid-row:2!important}
+body.ref-studio .studio-workspace>.master{grid-column:4!important;grid-row:2!important}
+body.ref-studio .studio-sidebar>#loudnessPanel{grid-column:auto!important;grid-row:auto!important;align-self:start!important;min-height:0!important}
+body.ref-studio .studio-workspace>.studio-panel>.panel-head,body.ref-studio .studio-workspace>.studio-panel>.loudness-heading,body.ref-studio .studio-workspace>.studio-panel>.group-buses-heading,body.ref-studio .studio-sidebar>.studio-panel>.panel-head,body.ref-studio .studio-sidebar>.studio-panel>.loudness-heading{
+  min-height:29px!important;height:29px!important;display:flex!important;align-items:center!important;
+  gap:6px!important;flex:none!important;margin:0!important;padding:0 9px!important;
+  background:linear-gradient(#2e3d48,#27333d)!important;border:0!important;border-bottom:1px solid #4c5e6b!important;
+  border-radius:0!important;box-shadow:inset 0 1px #c4d2da0a!important;
+  color:#dfe9f0!important;font:700 10px Arial,sans-serif!important;letter-spacing:0!important;
+}
+body.ref-studio .studio-workspace>.studio-panel .studio-hide,body.ref-studio .studio-sidebar>.studio-panel .studio-hide{
+  margin-left:auto!important;margin-right:0!important;min-width:18px!important;width:18px!important;height:17px!important;min-height:17px!important;line-height:10px!important;padding:0!important;
+  border:1px solid #546777!important;background:#22323e!important;border-radius:1px!important;color:#c0d0dc!important;font:700 12px Arial,sans-serif!important;
+}
+body.ref-studio .section-dot{width:3px!important;height:13px!important;border-radius:0!important;background:#54bad0!important;box-shadow:none!important}
+body.ref-studio .section-dot.green{background:#57cfa8!important}
+body.ref-studio .section-dot.amber{background:#e0a950!important}
+/* Invisible but usable keyboard-accessible browser/arrangement size bars. */
+body.ref-studio .studio-divider{position:absolute!important;z-index:10!important;border:0!important;background:transparent!important}
+body.ref-studio .studio-browser-divider{left:calc(var(--ref-browser) - 4px);width:8px;top:0;bottom:0;cursor:col-resize}
+body.ref-studio .studio-horizontal-divider{left:var(--ref-browser);right:0;top:calc(var(--ref-arrangement) - 4px);height:8px;cursor:row-resize}
+body.ref-studio .studio-track-label-divider{left:calc(var(--ref-track-label-width,280px) - 4px);top:28px;bottom:0;width:8px;cursor:col-resize}
+body.ref-studio .studio-divider:hover{background:#42aac737!important}
+body.ref-studio .studio-divider:focus-visible{outline:2px dashed #88c2de}
+/* True integrated browser, session file tree. */
+body.ref-studio .studio-sidebar>.library{background:#1d2933!important}
+body.ref-studio .studio-sidebar>.library>.panel-head{display:none!important}
+.ref-browser-tabs{display:flex;align-items:center;flex:0 0 32px;height:32px;padding:2px 4px 0;border-bottom:1px solid #465866;background:#293744}
+.ref-browser-tabs button{flex:1;min-width:0;height:28px;border:1px solid transparent!important;background:#24323d!important;color:#c4cfd9!important;padding:5px 2px!important;font:700 10px Arial,sans-serif!important}
+.ref-browser-tabs button.is-active{background:#355670!important;color:#edf6fa!important;border:1px solid #527995!important;border-bottom:0!important}
+.ref-browser-panes{display:block;flex:0 0 auto;min-height:0;overflow:visible;background:#1d2932}
+.ref-browser-pane{height:auto;overflow-y:visible;display:none;scrollbar-width:thin}
+.ref-browser-pane.is-active{display:block}
+body.ref-studio .pro-browser-tools{padding:7px!important;background:#1d2933!important;border-bottom:1px solid #344550}
+body.ref-studio .pro-browser-tools input{width:100%;height:25px!important;padding:5px 8px!important;border:1px solid #435968!important;border-radius:2px!important;background:#121f29!important;color:#dfe8ed!important;font:11px Arial,sans-serif!important}
+.ref-folder-header{display:flex;align-items:center;gap:7px;height:26px;margin:0;padding:0 12px;color:#bccbd7;font:700 10px Arial,sans-serif;letter-spacing:.2px;border-bottom:1px solid #354550}
+.ref-folder-header span{color:#8abbd1}
+.ref-session-list{padding:3px 6px}
+body.ref-studio .studio-sidebar .library #songList{display:block!important;max-height:none!important;height:auto!important;overflow:visible!important;padding:0!important;gap:0!important}
+body.ref-studio .studio-sidebar .library #songList .song-row{
+  display:flex!important;flex-direction:row!important;align-items:center!important;
+  margin:1px 0!important;padding:6px 7px!important;min-height:43px!important;gap:7px!important;
+  border:1px solid transparent!important;border-radius:1px!important;background:transparent!important;color:#d5e0e9!important;
+}
+body.ref-studio .studio-sidebar .library #songList .song-row:hover{background:#324452!important}
+body.ref-studio .studio-sidebar .library #songList .song-row.selected{background:#2b4a60!important;border-color:#49718d!important}
+body.ref-studio .song-row .song-index{display:grid;place-items:center;flex:0 0 22px;width:22px;height:22px;background:#273a49;color:#77c5d0;font:700 10px Consolas,monospace}
+body.ref-studio .song-row .song-name{font:700 11px Arial,sans-serif!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis}
+body.ref-studio .song-row .song-detail{font:9px Arial,sans-serif!important;color:#98abb9!important}
+body.ref-studio .song-row .song-bpm,body.ref-studio .song-row .track-count{display:none!important}
+body.ref-studio .studio-sidebar .library .library-note{padding:6px!important;font:9px Arial,sans-serif!important;color:#7e95a4!important;margin-top:0!important;border-top:1px solid #374753}
+.ref-source-item{display:flex;align-items:center;gap:8px;width:100%;height:31px;border:0;border-bottom:1px solid #293a48;background:transparent;color:#c8d7e2;text-align:left;padding:5px 13px;font:11px Arial,sans-serif}
+.ref-source-item:hover{background:#304b5e}
+.ref-file-icon{color:#65bcce;font-size:15px}
+.ref-browser-empty{padding:14px;color:#98aab9;font:11px Arial,sans-serif;line-height:1.6}
+/* Arrangement occupies the whole upper-right editor, no huge card header. */
+body.ref-studio #arrangement{background:#18232c!important;display:flex!important;flex-direction:column!important}
+body.ref-studio #arrangement>.panel-head{display:none!important}
+body.ref-studio #arrangement>.arrangement-legend,body.ref-studio #arrangement>.arrangement-footer{display:none!important}
+body.ref-studio #arrangement .arrangement-viewport{
+  position:relative!important;flex:1 1 auto!important;display:grid!important;grid-template-columns:var(--ref-track-label-width,280px) minmax(0,1fr)!important;
+  min-height:0!important;height:auto!important;background:#19252e!important;border:0!important;
+}
+body.ref-studio #arrangement .arrangement-labels{position:relative;display:block!important;min-width:0!important;overflow:hidden!important;background:#202e38!important;border-right:2px solid #4c6170!important}
+body.ref-studio #arrangement .arrangement-label-heading{
+  position:sticky;top:0;z-index:2;display:flex;align-items:center;
+  width:100%;height:28px!important;min-height:28px!important;padding-left:13px!important;
+  background:#30404c!important;border-bottom:1px solid #4a5d6d!important;
+  font:700 10px Arial,sans-serif!important;color:#d7e4eb!important;letter-spacing:.2px!important;
+}
+body.ref-studio #arrangement .arrangement-label-heading::before{content:'TRACK';}
+body.ref-studio #arrangement .arrangement-label-heading{font-size:0!important}
+body.ref-studio #arrangement .arrangement-label-heading::before{font-size:10px!important}
+body.ref-studio #arrangement .arrangement-track-label{
+  position:relative!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  flex-direction:row!important;gap:5px!important;padding:0 102px 0 42px!important;
+  min-height:39px!important;max-height:160px!important;width:100%!important;
+  background:#24323d!important;border-left:4px solid var(--track-color)!important;border-bottom:1px solid #445662!important;
+}
+body.ref-studio #arrangement .arrangement-track-label:nth-child(2n){background:#283842!important}
+body.ref-studio #arrangement .arrangement-track-label strong{display:block!important;font:700 11px Arial,sans-serif!important;color:#eaf0f3!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:130px!important}
+body.ref-studio #arrangement .arrangement-track-label strong{max-width:calc(100% - 6px)!important}
+body.ref-studio #arrangement .arrangement-track-label small{display:none!important}
+.ref-track-index{position:absolute;left:10px;top:50%;transform:translateY(-50%);font:10px Consolas,monospace;color:#8eabbc;font-weight:400}
+body.ref-studio #arrangement .timeline-track-tools{position:absolute!important;right:57px!important;top:50%!important;transform:translateY(-50%)!important;display:flex;gap:3px}
+body.ref-studio #arrangement .timeline-track-tools button{width:18px!important;min-height:18px!important;height:18px!important;border:1px solid #496074!important;background:#1b2a35!important;border-radius:2px!important;font:700 10px Arial,sans-serif!important;color:#c4d6de!important;padding:0!important}
+body.ref-studio #arrangement .timeline-track-tools .track-mute.is-on{background:#a44b54!important;color:white!important}
+body.ref-studio #arrangement .timeline-track-tools .track-solo.is-on{background:#e3ae42!important;color:#18212a!important}
+body.ref-studio #arrangement .timeline-track-color{display:none}
+.ref-track-mini{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:41px;height:7px;background:#121d23;border:1px solid #384b58;border-radius:1px;overflow:hidden}
+.ref-track-mini i{display:block;width:0;height:100%;background:linear-gradient(90deg,#39b876,#b3d94b,#e8a43d);transition:width .08s linear}
+body.ref-studio #arrangement .arrangement-scroll{height:100%!important;min-height:0!important;overflow:auto!important;background:#18232d!important;scrollbar-color:#597284 #1b2934;scrollbar-width:thin}
+body.ref-studio #arrangement .arrangement-content{position:relative!important;background:#182630!important}
+body.ref-studio #arrangement .timeline-ruler{
+  position:sticky!important;top:0!important;z-index:11!important;height:28px!important;min-height:28px!important;
+  background:linear-gradient(#2d3e4b,#25333f)!important;border-bottom:1px solid #597181!important;
+}
+body.ref-studio #arrangement .timeline-mark{border-left:1px solid #8194a857!important}
+body.ref-studio #arrangement .timeline-mark span{font:10px Consolas,monospace!important;color:#c7d8e3!important}
+body.ref-studio #arrangement .arrangement-tracks{background:repeating-linear-gradient(to right,transparent 0 19px,#3348594d 20px,transparent 21px 79px,#516e822c 80px,transparent 81px),#182630!important}
+body.ref-studio #arrangement .arrangement-track{position:relative!important;background:#192832a1!important;border:0!important;border-bottom:1px solid #3f5060!important;min-height:28px!important}
+body.ref-studio #arrangement .arrangement-track:nth-child(even){background:#21303ba6!important}
+body.ref-studio #arrangement .editor-clip{
+  top:2px!important;height:calc(100% - 4px)!important;min-height:22px!important;
+  border-radius:1px!important;border:1px solid color-mix(in srgb,var(--clip-color) 66%,#17262f)!important;
+  background:color-mix(in srgb,var(--clip-color) 27%,#101d26)!important;
+  box-shadow:inset 0 1px #ffffff1c!important;overflow:hidden!important;
+}
+body.ref-studio #arrangement .editor-clip.selected{outline:2px solid #f4c274!important;outline-offset:-2px!important}
+body.ref-studio #arrangement .editor-clip canvas{width:100%!important;height:100%!important;object-fit:fill!important;opacity:1!important;mix-blend-mode:screen}
+body.ref-studio #arrangement .editor-clip .clip-name{position:absolute!important;z-index:2!important;left:5px!important;top:1px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:calc(100% - 8px)!important;background:#0e20267a!important;color:#f7faff!important;font:700 9px Arial,sans-serif!important;padding:1px 3px!important;border-radius:1px!important;text-shadow:none!important;pointer-events:none!important}
+body.ref-studio #arrangement .editor-clip .clip-fades{display:none!important}
+body.ref-studio #arrangement .arrangement-playhead{z-index:9!important}
+body.ref-studio #arrangement .playhead-line{width:2px!important;background:#efa844!important;box-shadow:0 0 4px #cf8c48aa!important}
+body.ref-studio #arrangement .playhead-cap{background:#efa844!important;border-color:#efa844!important}
+body.ref-studio .arrangement-vertical-rail{width:10px!important;background:#2b3d49!important;color:#9fc3d2!important;border-color:#405566!important}
+body.ref-studio .arrangement-vertical-rail small{display:none!important}
+/* Bottom mixer/console: original DSP controls rebuilt visually into true 83px channel strips. */
+body.ref-studio .studio-workspace>.editor{display:flex!important;flex-direction:column!important;background:#232c35!important}
+body.ref-studio .editor>.panel-head{display:none!important}
+body.ref-studio .editor .track-ruler,body.ref-studio .editor .bankbar{display:none!important}
+body.ref-studio .pro-mixer-navigation{
+  height:32px!important;min-height:32px!important;flex:0 0 32px!important;
+  display:flex;align-items:center;gap:7px;justify-content:space-between;
+  padding:3px 7px!important;margin:0!important;border:0!important;border-bottom:1px solid #4b5d6a!important;
+  background:#293945!important;color:#9fb3c2
+}
+body.ref-studio .pro-tabs{display:flex;gap:4px;align-items:center}
+body.ref-studio .pro-tabs button{height:24px!important;min-height:24px!important;padding:3px 10px!important;background:#263844!important;border:1px solid #495e6d!important;color:#c6d6e2!important;border-radius:2px!important;font:700 11px Arial,sans-serif!important}
+body.ref-studio .pro-tabs .pro-tab-active{background:#2d5d7d!important;border-color:#477ca0!important;color:#fff!important}
+body.ref-studio .pro-console-label{font:8px Arial,sans-serif;color:#8e9eaa;white-space:nowrap}
+body.ref-studio .studio-panel .channels{
+  display:flex!important;flex:1 1 auto!important;flex-wrap:nowrap!important;min-height:0!important;height:auto!important;
+  gap:0!important;align-items:stretch!important;justify-content:flex-start!important;
+  overflow-x:auto!important;overflow-y:hidden!important;padding:0!important;margin:0!important;
+  border:0!important;border-radius:0!important;background:#1f2b35!important;
+  scrollbar-width:thin;scrollbar-color:#607789 #1e2a34;
+}
+body.ref-studio .studio-panel .channels>.channel{
+  position:relative!important;display:flex!important;flex-direction:column!important;flex:0 0 83px!important;
+  width:83px!important;min-width:83px!important;max-width:83px!important;min-height:210px!important;
+  height:100%!important;margin:0!important;padding:4px 5px 0!important;gap:0!important;
+  border:0!important;border-right:1px solid #586976!important;border-radius:0!important;
+  background:linear-gradient(90deg,#2a3843 0%,#33424e 48%,#2b3843 100%)!important;
+  box-shadow:inset 1px 0 #97a8b41f!important;
+  overflow:hidden!important;
+}
+body.ref-studio .channel::before{display:none!important}
+body.ref-studio .channel .strip-grip{position:absolute;top:2px;right:1px;z-index:2;width:12px;height:12px;min-height:12px;padding:0!important;border:0;background:#3d4d59!important;color:#879eaf;font-size:9px;opacity:.7;cursor:grab}
+body.ref-studio .channel .channel-top{
+  order:9!important;min-height:28px!important;height:28px!important;flex:0 0 28px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  padding:2px!important;margin:0 -5px!important;gap:0!important;
+  border-top:1px solid #16242e!important;border-radius:0!important;background:var(--channel)!important;
+}
+body.ref-studio .channel .channel-name{font:700 10px Arial,sans-serif!important;color:#142027!important;text-align:center!important;max-width:100%;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.ref-studio .channel .channel-num,body.ref-studio .channel .channel-file{display:none!important}
+body.ref-studio .channel .channel-inserts{order:1!important;display:flex!important;flex-direction:column!important;gap:2px!important;flex:0 0 66px!important;height:66px!important;margin:0 0 6px!important;padding-top:1px!important}
+body.ref-studio .channel .insert-caption{display:block!important;height:11px;font:700 8px Arial,sans-serif;color:#a3b5c3;letter-spacing:0;text-align:center}
+body.ref-studio .channel .insert-slot{display:block!important;width:100%;height:22px!important;min-height:22px!important;padding:2px!important;background:#16242e!important;color:#c9d9e4!important;border:1px solid #435b69!important;border-radius:2px!important;text-align:center;font:10px Arial,sans-serif!important}
+body.ref-studio .channel .insert-slot:hover{background:#36546a!important;color:white!important}
+body.ref-studio .channel .insert-slot.insert-active{background:#27634e!important;color:#c7f4da!important}
+body.ref-studio .channel .channel-routing{order:2!important;display:flex!important;flex-direction:column!important;flex:0 0 59px!important;gap:1px!important;min-height:59px!important;margin:0!important;padding:2px!important;background:#253540!important;border:1px solid #435766!important;border-radius:1px!important}
+body.ref-studio .channel .channel-routing label{display:grid!important;grid-template-columns:20px minmax(0,1fr)!important;align-items:center!important;gap:2px!important;color:#bfcad4!important;font:700 8px Arial,sans-serif!important}
+body.ref-studio .channel .pan-track{position:relative!important;min-width:0!important;height:12px!important;background:#0f1b24!important;border:1px solid #637585!important;border-radius:1px!important;overflow:hidden!important}
+body.ref-studio .channel .pan-center{position:absolute!important;left:50%!important;top:0!important;bottom:0!important;width:1px!important;background:#a0b4c1!important;z-index:3!important}
+body.ref-studio .channel .pan-fill{background:#52bec8!important;opacity:.85!important}
+body.ref-studio .channel .pan-position{background:#e4ecf2!important;width:2px!important;border-radius:0!important}
+body.ref-studio .channel .pan-knob{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;appearance:none!important;-webkit-appearance:none!important;background:transparent!important;opacity:0!important;cursor:ew-resize!important;z-index:5}
+body.ref-studio .channel .aux-knob{width:100%!important;height:10px!important;accent-color:#5bbdce!important;margin:0!important}
+body.ref-studio .channel .group-select{width:100%!important;height:15px!important;min-height:15px!important;padding:0!important;background:#142531!important;color:#d6e7ef!important;font:8px Arial,sans-serif!important;border:1px solid #475e6c!important;border-radius:1px!important}
+body.ref-studio .channel .channel-buttons{order:3!important;display:flex!important;align-items:center!important;gap:3px!important;min-height:24px!important;height:24px!important;flex:0 0 24px!important;padding:2px 0!important;margin:0!important}
+body.ref-studio .channel .channel-buttons button{width:50%!important;flex:1 1 0!important;min-width:0!important;min-height:19px!important;height:19px!important;margin:0!important;padding:0!important;font:700 10px Arial,sans-serif!important;color:#cbd8e1!important;background:#293946!important;border:1px solid #5d7280!important;border-radius:2px!important}
+body.ref-studio .channel .channel-buttons .comp-btn,body.ref-studio .channel .channel-buttons .eq-btn{display:none!important}
+body.ref-studio .channel .channel-buttons .mute-btn.active-mute{background:#a14c54!important;color:#fff!important}
+body.ref-studio .channel .channel-buttons .solo-btn.active-solo{background:#e7b34e!important;color:#1d2429!important}
+body.ref-studio .channel .meter-label{display:none!important}
+body.ref-studio .channel>.meter{
+  position:absolute!important;top:166px!important;right:8px!important;bottom:40px!important;
+  width:10px!important;height:auto!important;min-height:45px!important;
+  overflow:hidden!important;border:1px solid #111b23!important;border-radius:1px!important;background:#142329!important;
+  box-shadow:inset 0 0 4px #000a!important;
+}
+body.ref-studio .channel>.meter .meter-fill{position:absolute!important;bottom:0!important;left:0!important;width:100%!important;height:0;background:linear-gradient(to top,#4bd976 0%,#6fe75a 56%,#e3cd3b 80%,#f09a46 95%,#e65a4e 100%)!important;transition:height .08s linear!important}
+body.ref-studio .channel .fader-zone{
+  order:4!important;flex:1 1 auto!important;min-height:55px!important;height:auto!important;
+  margin:0 14px 0 0!important;padding:0!important;gap:3px!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+}
+body.ref-studio .channel .fader-zone .scale{height:82%!important;min-height:40px!important;display:flex!important;justify-content:space-between!important;flex-direction:column!important;color:#9cb0bc!important;font:8px Consolas,monospace!important}
+body.ref-studio .channel .fader-zone .scale span:nth-child(1)::after{content:''}
+body.ref-studio .channel .fader{appearance:slider-vertical!important;-webkit-appearance:slider-vertical!important;writing-mode:vertical-lr!important;direction:rtl!important;width:26px!important;height:83%!important;min-height:50px!important;max-height:none!important;margin:0!important;background:transparent!important;accent-color:#d5e2e8!important}
+body.ref-studio .channel .db-value{order:8!important;flex:0 0 17px!important;height:17px!important;min-height:17px!important;display:block!important;margin:0!important;padding:1px!important;color:#e5edf3!important;text-align:center!important;font:700 11px Consolas,monospace!important;letter-spacing:0!important}
+/* Group strips share console section and are differentiated by steel-gray tone. */
+body.ref-studio .studio-workspace>.group-buses{background:#3c4851!important;padding:0!important}
+body.ref-studio .group-buses-heading{order:0!important;flex:0 0 32px!important;display:flex!important;align-items:center!important;padding:0 9px!important;background:#34434d!important;color:#dce5eb!important;font:700 11px Arial,sans-serif!important;border-bottom:1px solid #62717d!important}
+body.ref-studio .group-buses-strips{order:1!important;display:flex!important;gap:0!important;flex:1 1 auto!important;align-items:stretch!important;overflow:hidden!important;padding:0!important;margin:0!important;background:#43505a!important}
+body.ref-studio .group-strip{position:relative!important;display:flex!important;flex-direction:column!important;flex:1 1 0!important;min-width:0!important;width:auto!important;max-width:none!important;height:100%!important;min-height:0!important;margin:0!important;padding:5px 3px 2px!important;border:0!important;border-right:1px solid #76828b!important;border-radius:0!important;background:linear-gradient(90deg,#48555e,#515d67 48%,#44515b)!important;color:#e4ebf0!important}
+body.ref-studio .group-strip-name{order:3!important;flex:0 0 28px!important;min-height:28px!important;display:grid!important;place-items:center!important;font:700 10px Arial,sans-serif!important;background:#5b7784!important;margin:auto -3px -2px!important;color:#e7f1f6!important;border-top:1px solid #7e909b!important}
+body.ref-studio .group-strip-subtitle{order:0!important;flex:0 0 20px!important;font:700 9px Arial,sans-serif!important;color:#d1e0e9!important;padding:5px 0!important;text-align:center!important}
+body.ref-studio .group-fader-zone{order:1!important;display:flex!important;flex:1 1 auto!important;min-height:80px!important;max-height:none!important;height:auto!important;padding:4px 0!important;margin:2px 0!important;border:0!important;border-radius:0!important;background:#3a4853!important}
+body.ref-studio .group-fader-scale{font:8px Consolas,monospace!important;color:#adc0cc!important;height:80%!important}
+body.ref-studio .group-fader{height:86%!important;min-height:60px!important;max-height:none!important;accent-color:#e0e6e8!important}
+body.ref-studio .group-fader-value{order:2!important;display:grid!important;place-items:center!important;flex:0 0 20px!important;height:20px!important;font:700 10px Consolas,monospace!important;color:#eaf0f3!important;padding:0!important}
+/* Master strip: a working master fader + stereo peak meters; the 8-band EQ stays a real drawer. */
+body.ref-studio .studio-workspace>.master{background:#29353e!important}
+body.ref-studio .master>.panel-head{justify-content:center!important}
+body.ref-studio .master>.panel-head>.subtle{display:none!important}
+body.ref-studio .master .master-meter{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:5px!important;margin:9px 10px 4px!important;padding:5px!important;border:1px solid #415868!important;border-radius:2px!important;background:#16242e!important}
+body.ref-studio .master .master-meter>div{display:flex!important;align-items:center!important;gap:4px!important;height:9px!important}
+body.ref-studio .master .master-meter span{width:11px!important;font:700 9px Arial,sans-serif!important;color:#cdd9e1!important}
+body.ref-studio .master .master-meter .meter{flex:1;height:8px!important;width:auto!important;min-width:0!important;background:#101e27!important;border:1px solid #29414a!important}
+body.ref-studio .master .master-meter .meter i{height:100%!important;background:linear-gradient(to right,#39ca70,#c2db48,#eaa03b)!important}
+body.ref-studio .master .master-control{display:flex!important;flex:1 1 auto!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:3px!important;margin:0 9px!important;padding:3px 0!important;min-height:50px!important;background:transparent!important;border:0!important}
+body.ref-studio .master .master-control label{font:700 9px Arial,sans-serif!important;color:#b7c7d3!important}
+body.ref-studio .master #masterVolume{appearance:slider-vertical!important;-webkit-appearance:slider-vertical!important;writing-mode:vertical-lr!important;direction:rtl!important;width:30px!important;height:calc(100% - 35px)!important;min-height:65px!important;max-height:260px!important;accent-color:#cce2ee!important;margin:0!important}
+body.ref-studio .master #masterValue{font:700 11px Consolas,monospace!important;color:#e8f1f5!important}
+body.ref-studio .master .ref-master-eq-toggle{flex:0 0 25px!important;height:25px!important;min-height:25px!important;margin:4px 7px 7px!important;padding:3px!important;background:#344858!important;border:1px solid #587081!important;color:#d9e5ec!important;font:700 9px Arial,sans-serif!important;border-radius:2px!important}
+body.ref-studio .master .ref-eq-drawer{display:none!important}
+body.ref-studio .master .ref-eq-drawer.ref-eq-open{
+  display:block!important;position:fixed!important;z-index:300!important;right:15px!important;top:160px!important;
+  width:410px!important;max-width:calc(100vw - 30px)!important;max-height:65vh!important;overflow-y:auto!important;
+  margin:0!important;padding:12px!important;background:#1a2934!important;border:1px solid #738da0!important;box-shadow:0 16px 38px #000b!important;border-radius:3px!important;
+}
+body.ref-studio .master .ref-eq-drawer .master-eq-bands{min-width:0!important;width:100%!important}
+body.ref-studio .master .master-note{display:none!important}
+/* Compact loudness meter stays docked below the project browser. */
+body.ref-studio #loudnessPanel{background:#27353f!important;color:#e2edf2!important;margin:0!important;padding:4px!important}
+body.ref-studio #loudnessPanel .loudness-heading{min-height:22px!important;height:22px!important;gap:3px!important;flex-wrap:nowrap!important;margin:0!important;padding:0 2px!important}
+body.ref-studio #loudnessPanel .loudness-heading strong{font:700 8px Arial,sans-serif!important;letter-spacing:0!important;white-space:nowrap!important}
+body.ref-studio #loudnessPanel .loudness-heading span{display:none!important}
+body.ref-studio #loudnessPanel .loudness-heading button{margin-left:auto!important;padding:2px 3px!important;font:700 7px Arial,sans-serif!important;white-space:nowrap!important}
+body.ref-studio #loudnessPanel .loudness-layout{display:grid!important;grid-template-columns:31px minmax(0,1fr)!important;max-width:none!important;min-height:0!important;padding:3px 0!important;gap:3px!important}
+body.ref-studio #loudnessPanel .loudness-gauge{width:31px!important;min-width:31px!important;grid-template-columns:11px 16px!important;grid-template-rows:minmax(116px,1fr) 13px!important;gap:0 2px!important}
+body.ref-studio #loudnessPanel .loudness-scale{font:6px Arial,sans-serif!important;padding:0 0 2px!important}
+body.ref-studio #loudnessPanel .loudness-gauge-caption{font:700 8px Arial,sans-serif!important}
+body.ref-studio #loudnessPanel .loudness-values{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:minmax(27px,auto)!important;gap:2px!important}
+body.ref-studio #loudnessPanel .loudness-reading{min-width:0!important;min-height:27px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:1px!important;padding:2px!important;background:#354550!important;border:1px solid #465866!important;border-radius:1px!important}
+body.ref-studio #loudnessPanel .loudness-reading strong{font:700 10px Consolas,monospace!important;order:1!important}
+body.ref-studio #loudnessPanel .loudness-reading span{font:700 6px Arial,sans-serif!important;line-height:1.1!important;letter-spacing:0!important;order:2!important;margin:0!important;text-align:center!important}
+body.ref-studio #loudnessPanel .loudness-reading.highlight{background:#416f93!important}
+body.ref-studio #loudnessPanel .loudness-note{display:none!important}
+body.ref-studio .studio-workspace .studio-panel#loudnessPanel .loudness-layout{grid-template-columns:35px minmax(0,1fr)!important;max-width:none!important;min-height:0!important;height:auto!important;padding:3px 0!important;gap:3px!important}
+body.ref-studio .studio-workspace .studio-panel#loudnessPanel .loudness-gauge{width:35px!important;min-width:35px!important;height:330px!important;grid-template-columns:13px 18px!important;grid-template-rows:minmax(0,1fr) 13px!important;gap:0 2px!important}
+body.ref-studio .studio-workspace .studio-panel#loudnessPanel .loudness-values{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,1fr))!important;height:330px!important;min-height:330px!important;gap:3px!important}
+body.ref-studio .studio-workspace .studio-panel#loudnessPanel .loudness-reading{min-height:0!important;height:auto!important;padding:2px!important;gap:1px!important}
+body.ref-studio .studio-workspace .studio-panel#loudnessPanel .loudness-reading strong{font:700 12px Consolas,monospace!important;line-height:1!important}
+body.ref-studio .studio-workspace .studio-panel#loudnessPanel .loudness-reading span{font:700 7px Arial,sans-serif!important;line-height:1.1!important;margin:0!important}
+body.ref-studio .studio-workspace .studio-panel#loudnessPanel .loudness-layout .loudness-scale{font-size:6px!important}
+body.ref-studio .help-strip,body.ref-studio>footer{display:none!important}
+body.ref-studio .editor[data-pro-mix="fx"] .channel-routing{opacity:.35}
+body.ref-studio .editor[data-pro-mix="routes"] .channel-inserts{opacity:.35}
+/* Alternate palettes, functional theme selector. Reference graphite stays the default. */
+body.ref-studio[data-studio-theme="slate"]{--ref-bg:#15212a;--ref-shell:#213540;--ref-amber:#5ebec9;--ref-border:#49727f}
+body.ref-studio[data-studio-theme="classic"]{--ref-bg:#1b201e;--ref-shell:#293128;--ref-amber:#a9d76a;--ref-border:#516250}
+/* Responsiveness: maintain readable fixed-width channel strips; scroll rather than squeezing. */
+@media(min-width:1650px){
+  body.ref-studio .studio-workspace{grid-template-columns:248px minmax(520px,1fr) 294px 164px!important}
+  body.ref-studio .studio-workspace>.studio-panel{min-height:0}
+}
+@media(max-width:1300px){
+  body.ref-studio .studio-workspace{min-width:1190px!important;grid-template-columns:218px minmax(480px,1fr) 284px 154px!important}
+  body.ref-studio .session-control{max-width:195px}
+  body.ref-studio .online{display:none!important}
+  body.ref-studio #transportDock .session-title{display:none!important}
+  body.ref-studio .studio-toolbar-controls .studio-setting:nth-child(2){display:none!important}
+}
+@media(max-width:890px){
+  body.ref-studio .topbar{position:relative!important;top:0!important;height:37px!important;min-height:37px!important}
+  body.ref-studio #transportDock.transport-fixed{position:sticky!important;top:0!important;overflow-x:auto!important;padding:6px!important;gap:6px!important;height:68px!important;min-height:68px!important;max-height:68px!important}
+  body.ref-studio #transportDock .session-title,body.ref-studio #transportDock .ref-range{display:none!important}
+  body.ref-studio #transportDock .session-actions button{width:34px!important;min-width:34px!important;height:51px!important}
+  body.ref-studio #transportDock .pro-beat-counter{min-width:150px!important}
+  body.ref-studio .studio-toolbar{top:68px!important;overflow-x:auto!important}
+  body.ref-studio .studio-workspace{min-width:1150px!important}
+  body.ref-studio .studio-toolbar-controls .studio-setting{display:none!important}
+}
+/* Final layout constraints — prevent legacy responsive rules from squeezing the real console. */
+body.ref-studio #studioWorkspace>.editor>.panel-head{display:none!important}
+body.ref-studio #studioWorkspace>.group-buses{
+  flex-wrap:nowrap!important;align-items:stretch!important;justify-content:flex-start!important;gap:0!important;
+}
+body.ref-studio #studioWorkspace>.group-buses>.group-buses-heading{
+  width:100%!important;flex:0 0 32px!important;min-height:32px!important;height:32px!important;
+  padding-left:11px!important;letter-spacing:0!important;
+}
+body.ref-studio #studioWorkspace>.group-buses>.group-buses-strips{
+  width:100%!important;height:calc(100% - 32px)!important;flex:1 1 auto!important;min-height:0!important;
+  display:flex!important;flex-wrap:nowrap!important;overflow:hidden!important;align-items:stretch!important;
+}
+body.ref-studio #studioWorkspace>.group-buses .group-strip{
+  flex:0 1 25%!important;min-width:0!important;width:25%!important;max-width:25%!important;
+}
+body.ref-studio #studioWorkspace>.master{
+  min-height:0!important;max-height:var(--ref-mixer)!important;height:var(--ref-mixer)!important;
+  overflow:hidden!important;
+}
+body.ref-studio .studio-workspace{grid-template-rows:minmax(0,var(--ref-arrangement)) minmax(0,var(--ref-mixer)) auto!important}
+body.ref-studio .studio-toolbar-controls{max-width:31vw!important}
+body.ref-studio .studio-toolbar-controls .studio-setting:nth-child(2),body.ref-studio .studio-toolbar-controls .studio-setting:nth-child(3){display:none!important}
+body.ref-studio .studio-toolbar-controls .studio-setting:nth-child(1){margin-right:4px!important}
+body.ref-studio .studio-toolbar-brand{font-size:9px!important}
+body.ref-studio .studio-toolbar-brand>span:not(#workspaceProjectLabel){display:none!important}
